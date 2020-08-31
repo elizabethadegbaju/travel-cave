@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from blog.forms import PostForm
 from blog.models import Profile
 
 
@@ -32,7 +34,19 @@ def view_post(request, pk):
 
 @login_required
 def create_post(request):
-    return None
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        print(form)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.author = request.user.profile
+            instance.save()
+            return redirect('blog:home')
+        else:
+            return HttpResponse(status=400)
+    elif request.method == 'GET':
+        form = PostForm()
+    return render(request, 'create_post.html', {'form': form})
 
 
 def register(request):

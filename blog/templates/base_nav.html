@@ -10,7 +10,8 @@
                 <li><a href="{% url 'blog:home' %}">Home</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="#">My Profile</a></li>
-                    <li><a href="#">Create Post</a></li>
+                    <li><a href="{% url 'blog:create_post' %}">Create Post</a>
+                    </li>
                     <li><a href="{% url 'blog:logout' %}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'blog:login' %}">Login</a></li>

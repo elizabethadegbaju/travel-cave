@@ -1,13 +1,12 @@
 from django import forms
-from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
+from django_summernote.fields import SummernoteTextFormField
 
 from blog.models import Post
 
 
-class FormFromSomeModel(forms.ModelForm):
+class PostForm(forms.ModelForm):
+    content = SummernoteTextFormField()
+
     class Meta:
         model = Post
-        widgets = {
-            'foo': SummernoteWidget(),
-            'bar': SummernoteInplaceWidget(),
-        }
+        exclude = ('created_at', 'author')

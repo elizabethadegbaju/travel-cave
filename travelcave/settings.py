@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'django_summernote',
+    'materializecssform',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,7 @@ WSGI_APPLICATION = 'travelcave.wsgi.application'
 
 # Summernote
 SUMMERNOTE_THEME = 'bs4'
+
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

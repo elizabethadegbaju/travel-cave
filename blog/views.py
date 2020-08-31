@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from blog.forms import PostForm
-from blog.models import Profile
+from blog.models import Profile, Post
 
 
 def login_view(request):
@@ -75,3 +75,32 @@ def register(request):
 def logout_view(request):
     logout(request)
     return redirect('blog:home')
+
+
+def my_posts(request):
+    posts = request.user.profile.post_set.all()
+    return render(request, 'posts.html', {'posts': posts})
+
+
+def edit_post(request, pk):
+    if request.method == 'POST':
+        post = Post.objects.get(id=pk)
+        form = PostForm(request.POST, instance=post)
+        print(form)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.author = request.user.profile
+            instance.save()
+            return redirect('blog:home')
+        else:
+            return HttpResponse(status=400)
+    elif request.method == 'GET':
+        post = Post.objects.get(id=pk)
+        form = PostForm(instance=post)
+    return render(request, 'edit_post.html', {'form': form})
+
+
+def delete_post(request, pk):
+    post = Post.objects.get(id=pk)
+    post.delete()
+    return redirect('blog:my_posts')

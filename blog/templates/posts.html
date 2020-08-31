@@ -1,0 +1,71 @@
+{% extends 'base_nav.html' %}
+{% load static %}
+{% block title %}
+    My Posts
+{% endblock %}
+{% block content %}
+    <div class="container center">
+        {% if posts %}
+            <div class="row">
+                {% for post in posts %}
+                    <div class="col s12 m4">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="{% static 'img/sample-1.jpg' %}">
+                                <span class="card-title">{{ post.title }}</span>
+                                <a class="btn-floating halfway-fab waves-effect waves-light"><i
+                                        class="material-icons">share</i></a>
+                            </div>
+                            <div class="card-content">
+                                <p> {{ post.content|truncatewords_html:30|safe }}</p>
+                            </div>
+                            <div class="card-action">
+                                <a href="{% url 'blog:edit_post' post.id %}">Edit
+                                    Post</a>
+                                <a href="{% url 'blog:delete_post' post.id %}">Delete
+                                    Post</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>You have not created any posts yet. <a href="
+{% url 'blog:create_post' %}">Click here</a> to get started!</p>
+        {% endif %}
+
+    </div>
+{% endblock %}
+{% block footer %}
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Travel Cave</h5>
+                    <p class="grey-text text-lighten-4">You can use rows and
+                        columns here to organize your footer content.</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">Links</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link
+                            1</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link
+                            2</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link
+                            3</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#!">Link
+                            4</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                © 2020 Travel Cave
+                <a class="grey-text text-lighten-4 right" href="#!">More
+                    Links</a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

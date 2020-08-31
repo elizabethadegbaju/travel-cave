@@ -12,6 +12,8 @@
                     <li><a href="#">My Profile</a></li>
                     <li><a href="{% url 'blog:create_post' %}">Create Post</a>
                     </li>
+                    <li><a href="{% url 'blog:my_posts' %}">My Posts</a>
+                    </li>
                     <li><a href="{% url 'blog:logout' %}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'blog:login' %}">Login</a></li>

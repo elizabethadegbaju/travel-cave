@@ -25,5 +25,9 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
-    path('posts/create/', views.create_post, name="create_post")
+    path('posts/create/', views.create_post, name="create_post"),
+    path('posts/<int:pk>/edit/', views.edit_post, name="edit_post"),
+    path('posts/<int:pk>/delete/', views.delete_post, name="delete_post"),
+    path('posts/<int:pk>/view/', views.view_post, name="view_post"),
+    path('account/posts/',views.my_posts,name='my_posts'),
 ]

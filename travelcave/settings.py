@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+import json
 import os
 
 import dj_database_url
@@ -31,6 +31,22 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['travelcave.herokuapp.com', '127.0.0.1']
 
 # Application definition
+data = {}
+data['type'] = 'service_account'
+data['project_id'] = 'travel-cave'
+data['private_key_id'] = config('private_key_id')
+data['private_key'] = config('private_key')
+data['client_email'] = config('client_email')
+data['client_id'] = config('client_id')
+data['auth_uri'] = 'https://accounts.google.com/o/oauth2/auth'
+data['token_uri'] = 'https://oauth2.googleapis.com/token'
+data['auth_provider_x509_cert_url'] = 'https://www.googleapis.com/oauth2/v1/certs'
+data['client_x509_cert_url'] = config('client_x509_cert_url')
+
+with open('sa_online.json', 'w') as outfile:
+    json.dump(data, outfile)
+
+GOOGLE_APPLICATION_CREDENTIALS = os.path.join(BASE_DIR,'sa_online.json')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -77,7 +93,6 @@ WSGI_APPLICATION = 'travelcave.wsgi.application'
 
 # Summernote
 SUMMERNOTE_THEME = 'bs4'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

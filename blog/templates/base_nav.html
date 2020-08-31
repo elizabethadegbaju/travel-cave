@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav %}
+    <nav>
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo">Travel Cave</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i
+                    class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="{% url 'blog:home' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="#">My Profile</a></li>
+                    <li><a href="#">Create Post</a></li>
+                    <li><a href="{% url 'blog:logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'blog:login' %}">Login</a></li>
+                    <li><a href="{% url 'blog:register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="{% url 'blog:home' %}">Home</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'blog:login' %}">My Profile</a></li>
+        {% else %}
+            <li><a href="{% url 'blog:login' %}">Login</a></li>
+            <li><a href="{% url 'blog:register' %}">Register</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
+<script type="text/javascript"
+        src="{% static 'materialize/js/materialize.min.js' %}"></script>
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('.sidenav');
+            var options = {}
+            var instances = M.Sidenav.init(elems, options);
+        });
+    </script>
+{% endblock %}

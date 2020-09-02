@@ -78,7 +78,7 @@ def logout_view(request):
 
 
 def my_posts(request):
-    posts = request.user.profile.post_set.all()
+    posts = request.user.profile.blog_posts.all()
     return render(request, 'posts.html', {'posts': posts})
 
 

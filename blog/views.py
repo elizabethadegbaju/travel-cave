@@ -86,7 +86,6 @@ def edit_post(request, pk):
     if request.method == 'POST':
         post = Post.objects.get(id=pk)
         form = PostForm(request.POST, instance=post)
-        print(form)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.author = request.user.profile

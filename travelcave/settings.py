@@ -92,7 +92,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'travelcave.wsgi.application'
 
 # Summernote
-SUMMERNOTE_THEME = 'bs4'
+SUMMERNOTE_THEME = 'lite'
+
+SUMMERNOTE_CONFIG = {
+   'summernote': {
+        'width': '100%',
+        'height': 300,
+},
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

@@ -4,7 +4,7 @@
     My Posts
 {% endblock %}
 {% block content %}
-    <div class="container center">
+    <div class="container section">
         {% if posts %}
             <div class="row">
                 {% for post in posts %}
@@ -33,7 +33,6 @@
             <p>You have not created any posts yet. <a href="
 {% url 'blog:create_post' %}">Click here</a> to get started!</p>
         {% endif %}
-
     </div>
 {% endblock %}
 {% block footer %}

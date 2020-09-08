@@ -37,10 +37,17 @@
         {% endif %}
     </ul>
 {% endblock %}
-
-<script type="text/javascript"
-        src="{% static 'materialize/js/materialize.min.js' %}"></script>
-
+{% block footer %}
+    <div class="page-footer">
+        <div class="footer-copyright">
+            <div class="container">
+                © 2020 Travel Cave
+                <a class="grey-text text-lighten-4 right"
+                   href="{% url 'blog:home' %}">Home Page</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 {% block scripts %}
     <script>
         document.addEventListener('DOMContentLoaded', function () {

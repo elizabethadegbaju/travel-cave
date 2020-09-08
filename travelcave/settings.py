@@ -31,22 +31,20 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['travelcave.herokuapp.com', '127.0.0.1']
 
 # Application definition
-data = {}
-data['type'] = 'service_account'
-data['project_id'] = 'travel-cave'
-data['private_key_id'] = config('private_key_id')
-data['private_key'] = config('private_key')
-data['client_email'] = config('client_email')
-data['client_id'] = config('client_id')
-data['auth_uri'] = 'https://accounts.google.com/o/oauth2/auth'
-data['token_uri'] = 'https://oauth2.googleapis.com/token'
-data['auth_provider_x509_cert_url'] = 'https://www.googleapis.com/oauth2/v1/certs'
-data['client_x509_cert_url'] = config('client_x509_cert_url')
+data = {'type': 'service_account', 'project_id': 'travel-cave',
+        'private_key_id': config('private_key_id'),
+        'private_key': config('private_key'),
+        'client_email': config('client_email'),
+        'client_id': config('client_id'),
+        'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+        'token_uri': 'https://oauth2.googleapis.com/token',
+        'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs',
+        'client_x509_cert_url': config('client_x509_cert_url')}
 
 with open('sa_online.json', 'w') as outfile:
     json.dump(data, outfile)
 
-GOOGLE_APPLICATION_CREDENTIALS = os.path.join(BASE_DIR,'sa_online.json')
+GOOGLE_APPLICATION_CREDENTIALS = os.path.join(BASE_DIR, 'sa_online.json')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -95,10 +93,10 @@ WSGI_APPLICATION = 'travelcave.wsgi.application'
 SUMMERNOTE_THEME = 'lite'
 
 SUMMERNOTE_CONFIG = {
-   'summernote': {
+    'summernote': {
         'width': '100%',
         'height': 300,
-},
+    },
 }
 
 # Database

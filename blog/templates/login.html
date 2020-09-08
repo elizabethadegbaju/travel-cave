@@ -6,15 +6,16 @@
 {% block content %}
     <div class="container section">
         <div class="row">
-            <div class="col s6 offset-s3">
+            <div class="col s12 m10 l6 offset-m1 offset-l3">
                 <div class="card-panel center-align">
+                    <h4 class="card-title pink-text text-darken-2">Log In</h4>
                     <form action="{% url 'blog:login' %}" method="post">
                         {% csrf_token %}
                         <div class="row">
                             <div class="input-field col s12">
                                 <input id="username" type="text" required
                                        name="username">
-                                <label for="username">Email</label>
+                                <label for="username">Username</label>
                             </div>
                         </div>
                         <div class="row">

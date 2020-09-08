@@ -95,7 +95,6 @@ SUMMERNOTE_THEME = 'lite'
 SUMMERNOTE_CONFIG = {
     'summernote': {
         'width': '100%',
-        'height': 300,
     },
 }
 

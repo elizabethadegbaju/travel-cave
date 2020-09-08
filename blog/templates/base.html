@@ -53,6 +53,12 @@
 <script type="text/javascript"
         src="{% static 'materialize/js/materialize.min.js' %}"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const elems = document.querySelectorAll('.sidenav');
+        const instances = M.Sidenav.init(elems);
+    });
+</script>
 {% block scripts %}
 {% endblock %}
 </body>

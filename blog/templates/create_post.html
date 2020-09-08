@@ -7,7 +7,7 @@
 {% block content %}
     <div class="container section">
         <div class="row">
-            <div class="col s8 offset-s2">
+            <div class="col s12 m10 l8 offset-m1 offset-l2">
                 <div class="card-panel">
                     <form method="post" action="{% url 'blog:create_post' %}">
                         {% csrf_token %}

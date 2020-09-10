@@ -1,8 +1,12 @@
+from autoslug import AutoSlugField
 from django.contrib.auth.models import User
 from django.db import models
 
 
 # Create your models here.
+from django.utils.text import slugify
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     DOB = models.DateField()
@@ -38,7 +42,7 @@ class Location(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = AutoSlugField(populate_from='title')
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)

@@ -3,10 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from google.cloud import language
+from google.cloud.language import enums
+from google.cloud.language import types
 
-# Create your views here.
 from blog.forms import PostForm
-from blog.models import Profile, Post
+from blog.models import Profile, Post, Location, LocationReview
 
 
 def login_view(request):
@@ -36,11 +38,12 @@ def view_post(request, pk):
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
-        print(form)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.author = request.user.profile
             instance.save()
+            post = Post.objects.get(id=instance.id)
+            analyse_entity_sentiment(form, post)
             return redirect('blog:home')
         else:
             return HttpResponse(status=400)
@@ -77,16 +80,19 @@ def logout_view(request):
     return redirect('blog:home')
 
 
+@login_required
 def my_posts(request):
     posts = request.user.profile.blog_posts.all()
     return render(request, 'posts.html', {'posts': posts})
 
 
+@login_required
 def edit_post(request, pk):
     if request.method == 'POST':
         post = Post.objects.get(id=pk)
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
+            analyse_entity_sentiment(form, post)
             instance = form.save(commit=False)
             instance.author = request.user.profile
             instance.save()
@@ -97,6 +103,36 @@ def edit_post(request, pk):
         post = Post.objects.get(id=pk)
         form = PostForm(instance=post)
     return render(request, 'edit_post.html', {'form': form})
+
+
+def analyse_entity_sentiment(form, post):
+    client = language.LanguageServiceClient()
+    title = form.cleaned_data.get('title')
+    content = form.cleaned_data.get('content')
+    text = f"<p>{title}</p>{content}"
+    print(text)
+    document = types.Document(content=text,
+                              type=enums.Document.Type.HTML)
+    response = client.analyze_entity_sentiment(document=document)
+    for entity in response.entities:
+        if enums.Entity.Type(entity.type).name == 'LOCATION':
+            for mention in entity.mentions:
+                if enums.EntityMention.Type(
+                        mention.type).name == 'PROPER':
+                    print(f'\nDetected Location: {entity.name}')
+                    print(f'Salience score: {entity.salience}')
+                    sentiment = entity.sentiment
+                    print(f'Entity sentiment score: {sentiment.score}')
+                    print(
+                        f'Entity sentiment magnitude: {sentiment.magnitude}')
+                    location, created = Location.objects.get_or_create(
+                        name=entity.name.lower())
+                    location.save()
+                    review, created = LocationReview.objects.update_or_create(
+                        post=post, location=location,
+                        defaults={'sentiment': sentiment.score,
+                                  'magnitude': sentiment.magnitude})
+                    review.save()
 
 
 def delete_post(request, pk):

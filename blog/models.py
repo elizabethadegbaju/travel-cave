@@ -4,7 +4,16 @@ from django.db import models
 
 
 # Create your models here.
-from django.utils.text import slugify
+
+def profile_image(instance, filename):
+    """
+    This function generates the path where a profile image should be saved to.
+    :param instance: Instance of User Profile to be saved
+    :param filename: Name of file to be uploaded
+    :return: Path of file
+    """
+    ext = filename.split('.')[-1]
+    return 'image/user_{0}.{1}'.format(instance.user.id, ext)
 
 
 class Profile(models.Model):
@@ -16,10 +25,11 @@ class Profile(models.Model):
     facebook = models.CharField(max_length=50, null=True, blank=True)
     location = models.CharField(max_length=100, null=True, blank=True)
     users_following = models.ManyToManyField(to='self', symmetrical=False,
-                                             related_name='following')
-    locations_following = models.ManyToManyField(to='Location',
+                                             related_name='following',
+                                             blank=True)
+    locations_following = models.ManyToManyField(to='Location', blank=True,
                                                  related_name='locations_following')
-    image = models.ImageField(null=True)
+    image = models.ImageField(null=True, blank=True, upload_to=profile_image)
 
     def __str__(self):
         return self.user.username

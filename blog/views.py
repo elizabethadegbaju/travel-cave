@@ -8,7 +8,7 @@ from google.cloud.language import enums
 from google.cloud.language import types
 
 from blog.forms import PostForm
-from blog.models import Profile, Post, Location, LocationReview
+from blog.models import Profile, Post, Location, LocationReview, Tag
 
 
 def login_view(request):
@@ -44,6 +44,7 @@ def create_post(request):
             instance.save()
             post = Post.objects.get(id=instance.id)
             analyse_entity_sentiment(form, post)
+            classify_post(form, post)
             return redirect('blog:home')
         else:
             return HttpResponse(status=400)
@@ -93,6 +94,7 @@ def edit_post(request, pk):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             analyse_entity_sentiment(form, post)
+            classify_post(form, post)
             instance = form.save(commit=False)
             instance.author = request.user.profile
             instance.save()
@@ -106,13 +108,7 @@ def edit_post(request, pk):
 
 
 def analyse_entity_sentiment(form, post):
-    client = language.LanguageServiceClient()
-    title = form.cleaned_data.get('title')
-    content = form.cleaned_data.get('content')
-    text = f"<p>{title}</p>{content}"
-    print(text)
-    document = types.Document(content=text,
-                              type=enums.Document.Type.HTML)
+    client, document = extract_document(form)
     response = client.analyze_entity_sentiment(document=document)
     for entity in response.entities:
         if enums.Entity.Type(entity.type).name == 'LOCATION':
@@ -133,6 +129,34 @@ def analyse_entity_sentiment(form, post):
                         defaults={'sentiment': sentiment.score,
                                   'magnitude': sentiment.magnitude})
                     review.save()
+
+
+def classify_post(form, post):
+    client, document = extract_document(form)
+    response = client.classify_text(document=document)
+    categories = response.categories
+    tags = list()
+
+    for category in categories:
+        tag = category.name.split('/')[-1]
+        tag, created = Tag.objects.get_or_create(name=tag)
+        tag.save()
+        tags.append(tag)
+        print(u'{:<16}: {}'.format('\ntag', tag))
+        print(u'{:<16}: {}'.format('category', category.name))
+        print(u'{:<16}: {}'.format('confidence', category.confidence))
+    post.tags.set(tags)
+
+
+def extract_document(form):
+    client = language.LanguageServiceClient()
+    title = form.cleaned_data.get('title')
+    content = form.cleaned_data.get('content')
+    text = f"<p>{title}</p>{content}"
+    print(text)
+    document = types.Document(content=text,
+                              type=enums.Document.Type.HTML)
+    return client, document
 
 
 def delete_post(request, pk):

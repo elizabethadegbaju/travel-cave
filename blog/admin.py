@@ -1,8 +1,7 @@
 from django.contrib import admin
-# Register your models here.
 from django_summernote.admin import SummernoteModelAdmin
 
-from blog.models import Post, Profile
+from blog.models import *
 
 
 class PostAdmin(SummernoteModelAdmin):
@@ -11,3 +10,6 @@ class PostAdmin(SummernoteModelAdmin):
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Profile)
+admin.site.register(Tag)
+admin.site.register(Location)
+admin.site.register(LocationReview)

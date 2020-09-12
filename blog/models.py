@@ -25,10 +25,10 @@ class Profile(models.Model):
     facebook = models.CharField(max_length=50, null=True, blank=True)
     location = models.CharField(max_length=100, null=True, blank=True)
     users_following = models.ManyToManyField(to='self', symmetrical=False,
-                                             related_name='following',
+                                             related_name='followers',
                                              blank=True)
     locations_following = models.ManyToManyField(to='Location', blank=True,
-                                                 related_name='locations_following')
+                                                 related_name='followers')
     image = models.ImageField(null=True, blank=True, upload_to=profile_image)
 
     def __str__(self):
@@ -53,20 +53,50 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     slug = AutoSlugField(populate_from='title')
-    updated_on = models.DateTimeField(auto_now=True)
-    created_on = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE,
                                blank=True, related_name='blog_posts')
     locations = models.ManyToManyField(to=Location, related_name='reviews',
                                        through='LocationReview')
     tags = models.ManyToManyField(to=Tag, related_name='blog_posts')
+    total_likes = models.IntegerField(default=0)
+    total_comments = models.IntegerField(default=0)
+    total_shares = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ['-created_on']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f'{self.title} by {str(self.author)}'
+
+
+class PostLike(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.DO_NOTHING)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{str(self.user)} liked {str(self.post)} on {self.created_at}'
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.DO_NOTHING)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    parent = models.ForeignKey('Comment', on_delete=models.DO_NOTHING,
+                               null=True, blank=True, related_name='replies')
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{str(self.user)} commented on {str(self.post)} on {self.created_at}'
 
 
 class LocationReview(models.Model):

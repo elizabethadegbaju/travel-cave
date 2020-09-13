@@ -1,1 +1,1 @@
-"""Blog Module"""
+"""Blog Module."""

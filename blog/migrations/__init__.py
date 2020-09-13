@@ -1,1 +1,1 @@
-"""Migration files for Blog module"""
+"""Migration files for Blog module."""

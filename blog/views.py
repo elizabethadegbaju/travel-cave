@@ -175,12 +175,18 @@ def view_user(request, username):
     blog_posts = Post.objects.filter(author=profile)
     reviews = LocationReview.objects.filter(post__in=blog_posts)
     highlight = Post.objects.filter(is_published=True).order_by('-created_at',
-                                                             '-total_likes',
-                                                             '-total_comments',
-                                                             '-total_shares').first()
+                                                                '-total_likes',
+                                                                '-total_comments',
+                                                                '-total_shares').first()
+    # recommend users who follow the same content
+    recommended_users = (Profile.objects.filter(
+        users_following__in=profile.users_following.all()) | Profile.objects.filter(
+        locations_following__in=profile.locations_following.all())).order_by(
+        '?')[:5]
     return render(request, 'user.html',
                   {'profile': profile, 'activities': activities,
-                   'reviews': reviews, 'highlight': highlight})
+                   'reviews': reviews, 'highlight': highlight,
+                   'recommended_users': recommended_users})
 
 
 def get_user_activities_sorted(username):

@@ -590,66 +590,32 @@
                                     <h6>Who to follow</h6>
                                 </div>
                             </div>
-                            <div class="row mt-2">
-                                <div class="col s2 mt-2 pr-0 circle">
-                                    <a href="#"><img
-                                            class="responsive-img circle"
-                                            src="../../../app-assets/images/user/2.jpg"
-                                            alt=""></a>
+                            {% if recommended_users %}
+                                {% for recommended_user in recommended_users %}
+                                    <div class="row mt-2">
+                                        <div class="col s2 mt-2 pr-0 circle">
+                                            <a href="{% url 'blog:view_user' recommended_user.user.username %}"><img
+                                                    class="responsive-img circle"
+                                                    src="{{ recommended_user.image.url }}"
+                                                    alt=""></a>
+                                        </div>
+                                        <div class="col s9">
+                                            <a href="{% url 'blog:view_user' recommended_user.user.username %}">
+                                                <p class="m-0">{{ recommended_user.user.get_full_name }}</p>
+                                            </a>
+                                            <p class="m-0 grey-text lighten-3">{{ recommended_user.about|truncatewords:10 }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="row mt-2">
+                                    <div class="col s9">
+                                        <p class="m-0 grey-text">Start
+                                            following users to see
+                                            recommendations.</p>
+                                    </div>
                                 </div>
-                                <div class="col s9">
-                                    <a href="#">
-                                        <p class="m-0">Frank Goodman</p>
-                                    </a>
-                                    <p class="m-0 grey-text lighten-3">
-                                        Senior architect</p>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col s2 mt-2 pr-0 circle">
-                                    <a href="#"><img
-                                            class="responsive-img circle"
-                                            src="../../../app-assets/images/user/7.jpg"
-                                            alt=""></a>
-                                </div>
-                                <div class="col s9">
-                                    <a href="#">
-                                        <p class="m-0">Luiza Ales</p>
-                                    </a>
-                                    <p class="m-0 grey-text lighten-3">
-                                        Senior Developer</p>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col s2 mt-2 pr-0 circle">
-                                    <a href="#"><img
-                                            class="responsive-img circle"
-                                            src="../../../app-assets/images/user/4.jpg"
-                                            alt=""></a>
-                                </div>
-                                <div class="col s9">
-                                    <a href="#">
-                                        <p class="m-0">Robbin Drummo</p>
-                                    </a>
-                                    <p class="m-0 grey-text lighten-3">
-                                        Graphic Designer</p>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col s2 mt-2 pr-0 circle">
-                                    <a href="#"><img
-                                            class="responsive-img circle"
-                                            src="../../../app-assets/images/user/8.jpg"
-                                            alt=""></a>
-                                </div>
-                                <div class="col s9">
-                                    <a href="#">
-                                        <p class="m-0">Myles Steven</p>
-                                    </a>
-                                    <p class="m-0 grey-text lighten-3">
-                                        Senior Developer</p>
-                                </div>
-                            </div>
+                            {% endif %}
                             <hr class="mt-5">
                             <div class="row">
                                 <div class="col s12">

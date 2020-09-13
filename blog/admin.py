@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
 
-from blog.models import *
+from blog.models import Post, Profile, Tag, LocationReview, Location, Comment, \
+    PostLike
 
 
 class PostAdmin(SummernoteModelAdmin):

@@ -1,0 +1,600 @@
+{% extends 'base_nav.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+    {{ profile.user.get_full_name }}
+{% endblock %}
+{% block styles %}
+    <style>
+        .image-container {
+            max-height: 100px;
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+{% block nav %}
+    <nav class="nav-extended">
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">Travel Cave</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i
+                    class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="{% url 'blog:home' %}">Home</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'blog:view_user' user.username %}">My
+                        Profile</a></li>
+                    <li><a href="{% url 'blog:create_post' %}">Create Post</a>
+                    </li>
+                    <li><a href="{% url 'blog:my_posts' %}">My Posts</a>
+                    </li>
+                    <li><a href="{% url 'blog:logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'blog:login' %}">Login</a></li>
+                    <li><a href="{% url 'blog:register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="nav-content">
+            <div class="pb-0 pt-4">
+                <nav>
+                    <div class="nav-wrapper">
+                        <div class="col s12">
+                            <a href="{% url 'blog:home' %}"
+                               class="breadcrumb">Home</a>
+                            <a href="{% url 'blog:users' %}"
+                               class="breadcrumb">Users</a>
+                            <a href="#" class="breadcrumb">
+                                {{ profile.user.get_full_name }}</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="{% url 'blog:home' %}">Home</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="#">My Profile</a></li>
+            <li><a href="{% url 'blog:create_post' %}">Create Post</a>
+            </li>
+            <li><a href="{% url 'blog:my_posts' %}">My Posts</a>
+            </li>
+            <li><a href="{% url 'blog:logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'blog:login' %}">Login</a></li>
+            <li><a href="{% url 'blog:register' %}">Register</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col s12">
+            <div class="section">
+                <div class="row user-profile mt-1 ml-0 mr-0">
+                </div>
+                <div class="section" id="user-profile">
+                    <div class="row">
+                        <!-- User Profile Feed -->
+                        <div class="col s12 m4 l3">
+                            <div class="row">
+                                <div class="col s12 center-align">
+                                    <img class="responsive-img circle z-depth-5"
+                                         width="200" style="height: 200px"
+                                         src="{{ profile.image.url }}"
+                                         alt="">
+                                    <br>
+                                    <a class="waves-effect waves-light btn mt-5 border-radius-4"
+                                       href="{% url 'blog:follow_user' profile.user.username %}">
+                                        Follow</a>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col s6">
+                                    <h6>Followers</h6>
+                                    <h5 class="m-0"><a href="#">
+                                        {{ profile.followers.count }}</a>
+                                    </h5>
+                                </div>
+                                <div class="col s6">
+                                    <h6>Following</h6>
+                                    <h5 class="m-0"><a href="#">
+                                        {{ profile.users_following.count }}</a>
+                                    </h5>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row user-projects">
+                                <h6 class="col s12">Blog Posts</h6>
+                                {% for post in profile.blog_posts.all %}
+                                    <div class="col s4">
+                                        <img class="responsive-img photo-border mt-10"
+                                             alt=""
+                                             src="{% static 'img/sample-1.jpg' %}">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <hr class="mt-5">
+                            <div class="row">
+                                <div class="col s12">
+                                    <h6>Location Reviews</h6>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="collection">
+                                    {% for review in reviews %}
+                                        <a href="{% url 'blog:view_post' review.post.id %}"
+                                           class="collection-item">
+                                            {{ review.location|capfirst }}
+                                            (in
+                                            <em>{{ review.post.title }}</em>)
+                                            {% if review.sentiment >= 0.25 %}
+                                                <br><span class="green-text">
+                                                    Positive Opinion
+                                                </span>
+                                            {% elif review.sentiment <= -0.25 %}
+                                                <br><span class="red-text">>
+                                                    Negative Opinion
+                                                </span>
+                                            {% elif review.magnitude >= 0.2 %}
+                                                <br><span class="amber-text">
+                                                    Mixed Opinion
+                                                </span>
+                                            {% else %}
+                                                <br><span class="grey-text">
+                                                    Neutral
+                                                </span>
+                                            {% endif %}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- User Activities -->
+                        <div class="col s12 m8 l6">
+                            <div class="row">
+                                <div class="card z-depth-0"
+                                     id="feed">
+                                    <div class="card-content card-border-gray">
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <h5>{{ profile.user.get_full_name }}</h5>
+                                                <p>{{ profile.about }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <ul class="tabs mt-4">
+                                                    <li class="tab col m3 s6 p-0">
+                                                        <a href="#timeline"
+                                                           class="active">
+                                                            <i class="material-icons vertical-align-middle">crop_portrait</i>
+                                                            Activities
+                                                        </a></li>
+                                                    <li class="tab col m3 s6 p-0">
+                                                        <a href="#newsfeed">
+                                                            <i class="material-icons vertical-align-middle">bookmark_border</i>
+                                                            Feed
+                                                        </a></li>
+                                                </ul>
+                                            </div>
+                                            <div id="timeline"
+                                                 class="col s12">
+                                                {% for activity in activities %}
+                                                    {% if activity.is_published %}
+                                                        <!--Display Blog Posts-->
+                                                        <div class="row mt-5">
+                                                            <div class="col s1 pr-0 circle">
+                                                                <a href="#">
+                                                                    <img class="responsive-img circle"
+                                                                         src="{{ profile.image.url }}"
+                                                                         alt="">
+                                                                </a>
+                                                            </div>
+                                                            <div class="col s11">
+                                                                <a href="#">
+                                                                    <p class="m-0">{{ profile.user.get_full_name }}
+                                                                        published
+                                                                        <span>
+                                                                <i class="material-icons vertical-align-bottom">access_time</i>
+                                                                            {{ activity.created_at|timesince }}</span>
+                                                                        ago
+                                                                    </p>
+                                                                </a>
+                                                                <div class="row">
+                                                                    <div class="col s12">
+                                                                        <div class="card card-border z-depth-2">
+                                                                            <div class="card-image">
+                                                                                <img class="image-container"
+                                                                                     src="{% static 'img/sample-1.jpg' %}"
+                                                                                     alt="">
+                                                                            </div>
+                                                                            <div class="card-content">
+                                                                                <div>
+                                                                                    <div class="social-icon right">
+                                                                            <span><i
+                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span>
+                                                                                        <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.total_comments }}
+                                                                                        <span><i
+                                                                                                class="material-icons vertical-align-bottom ml-3 mr-1">share</i>{{ activity.total_shares }}</span>
+                                                                                    </div>
+                                                                                    <h6 class="font-weight-900 text-uppercase">
+                                                                                        <a href="{% url 'blog:view_post' activity.id %}">{{ activity.title }}</a>
+                                                                                    </h6>
+                                                                                </div>
+                                                                                <p>{{ activity.content|safe|truncatewords_html:20 }}</p>
+                                                                                <table>
+                                                                                    <tbody>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            Tags:
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class="pink-text text-darken-2">
+                                                                                                <em>
+                                                                                                    {% for tag in activity.tags.all %}
+                                                                                                        {% if forloop.last %}
+                                                                                                            {{ tag }}
+                                                                                                        {% else %}
+                                                                                                            {{ tag }}
+                                                                                                            ,
+                                                                                                        {% endif %}
+                                                                                                    {% endfor %}
+                                                                                                </em>
+                                                                                            </p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            Places:
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class="pink-text text-darken-2">
+                                                                                                <em>
+                                                                                                    {% for location in activity.locations.all %}
+                                                                                                        {% if forloop.last %}
+                                                                                                            {{ location|capfirst }}
+                                                                                                        {% else %}
+                                                                                                            {{ location|capfirst }}
+                                                                                                            ,
+                                                                                                        {% endif %}
+                                                                                                    {% endfor %}
+                                                                                                </em>
+                                                                                            </p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="mt-5">
+                                                    {% elif activity.message %}
+                                                        <!--Display Comments-->
+                                                        <div class="row mt-5">
+                                                            <div class="col s1 pr-0 circle">
+                                                                <a href="#">
+                                                                    <img class="responsive-img circle"
+                                                                         src="{{ profile.image.url }}"
+                                                                         alt="">
+                                                                </a>
+                                                            </div>
+                                                            <div class="col s11">
+                                                                <a href="#">
+                                                                    <p class="m-0">
+                                                                        {{ profile.user.get_full_name }}
+                                                                        commented
+                                                                        on
+                                                                        <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post }}</a>
+                                                                        <span><i
+                                                                                class="material-icons vertical-align-bottom">access_time</i>{{ activity.created_at|timesince }}</span>
+                                                                    </p>
+                                                                </a>
+                                                                <div class="row">
+                                                                    <div class="col s12">
+                                                                        <div class="card card-border z-depth-2">
+                                                                            <div class="card-content">
+                                                                                <p class="grey-text">{{ activity.message }}</p>
+                                                                            </div>
+                                                                            <div class="social-icon">
+                                                                                <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>
+                                                                                {{ activity.replies.count }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="mt-5">
+                                                    {% elif activity.post %}
+                                                        <!--Display likes-->
+                                                        <div class="row mt-5">
+                                                            <div class="col s1 pr-0 circle">
+                                                                <a href="#">
+                                                                    <img class="responsive-img circle"
+                                                                         src="{{ profile.image.url }}"
+                                                                         alt=""></a>
+                                                            </div>
+                                                            <div class="col s11">
+                                                                <a href="#">
+                                                                    <p class="m-0">
+                                                                        {{ profile.user.get_full_name }}
+                                                                        liked
+                                                                        <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post }}</a>
+                                                                        <span><i
+                                                                                class="material-icons vertical-align-bottom">access_time</i>{{ activity.created_at|timesince }}</span>
+                                                                    </p>
+                                                                </a>
+                                                                <div class="row">
+                                                                    <div class="col s12">
+                                                                        <div class="card card-border z-depth-2">
+                                                                            <div class="card-content">
+                                                                                <div class="row">
+                                                                                    <div class="col s2 pr-0 circle">
+                                                                                        <a href="{% url 'blog:view_user' activity.post.author.user.username %}"><img
+                                                                                                class="responsive-img circle"
+                                                                                                src="{{ activity.post.author.image.url }}"
+                                                                                                alt=""></a>
+                                                                                    </div>
+                                                                                    <div class="col s10">
+                                                                                        <h6>
+                                                                                            Blog
+                                                                                            Post
+                                                                                            by
+                                                                                            <a href="{% url 'blog:view_user' activity.post.author.user.username %}">{{ activity.post.author }}</a>
+                                                                                        </h6>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr>
+                                                                                <div class="social-icon right">
+                                                                                    <span><i
+                                                                                            class="material-icons vertical-align-bottom mr-1">favorite_border</i> {{ activity.post.total_likes }}</span>
+                                                                                    <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>
+                                                                                    {{ activity.post.total_comments }}
+                                                                                    <span><i
+                                                                                            class="material-icons vertical-align-bottom ml-3 mr-1">redo</i> {{ activity.post.total_shares }}</span>
+                                                                                </div>
+                                                                                <h6 class="font-weight-900 text-uppercase">
+                                                                                    <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post.title }}</a>
+                                                                                </h6>
+                                                                                <p>{{ activity.post.content|safe|truncatewords_html:20 }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="mt-5">
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div id="newsfeed"
+                                                 class="col s12">
+                                                {% for activity in activities %}
+                                                    {% if activity.is_published %}
+                                                        <!--Display Blog Posts-->
+                                                        <div class="row mt-5">
+                                                            <div class="col s1 pr-0 circle">
+                                                                <a href="#">
+                                                                    <img class="responsive-img circle"
+                                                                         src="{{ profile.image.url }}"
+                                                                         alt="">
+                                                                </a>
+                                                            </div>
+                                                            <div class="col s11">
+                                                                <a href="#">
+                                                                    <p class="m-0">{{ profile.user.get_full_name }}
+                                                                        published
+                                                                        <span>
+                                                                <i class="material-icons vertical-align-bottom">access_time</i>
+                                                                            {{ activity.created_at|timesince }}</span>
+                                                                        ago
+                                                                    </p>
+                                                                </a>
+                                                                <div class="row">
+                                                                    <div class="col s12">
+                                                                        <div class="card card-border z-depth-2">
+                                                                            <div class="card-image">
+                                                                                <img class="image-container"
+                                                                                     src="{% static 'img/sample-1.jpg' %}"
+                                                                                     alt="">
+                                                                            </div>
+                                                                            <div class="card-content">
+                                                                                <div>
+                                                                                    <div class="social-icon right">
+                                                                            <span><i
+                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span>
+                                                                                        <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.total_comments }}
+                                                                                        <span><i
+                                                                                                class="material-icons vertical-align-bottom ml-3 mr-1">share</i>{{ activity.total_shares }}</span>
+                                                                                    </div>
+                                                                                    <h6 class="font-weight-900 text-uppercase">
+                                                                                        <a href="{% url 'blog:view_post' activity.id %}">{{ activity.title }}</a>
+                                                                                    </h6>
+                                                                                </div>
+                                                                                <p>{{ activity.content|safe|truncatewords_html:20 }}</p>
+                                                                                <table>
+                                                                                    <tbody>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            Tags:
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class="pink-text text-darken-2">
+                                                                                                <em>
+                                                                                                    {% for tag in activity.tags.all %}
+                                                                                                        {% if forloop.last %}
+                                                                                                            {{ tag }}
+                                                                                                        {% else %}
+                                                                                                            {{ tag }}
+                                                                                                            ,
+                                                                                                        {% endif %}
+                                                                                                    {% endfor %}
+                                                                                                </em>
+                                                                                            </p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            Places:
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class="pink-text text-darken-2">
+                                                                                                <em>
+                                                                                                    {% for location in activity.locations.all %}
+                                                                                                        {% if forloop.last %}
+                                                                                                            {{ location|capfirst }}
+                                                                                                        {% else %}
+                                                                                                            {{ location|capfirst }}
+                                                                                                            ,
+                                                                                                        {% endif %}
+                                                                                                    {% endfor %}
+                                                                                                </em>
+                                                                                            </p>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="mt-5">
+                                                    {% elif activity.message %}
+                                                        <!--Display Comments-->
+                                                        <div class="row mt-5">
+                                                            <div class="col s1 pr-0 circle">
+                                                                <a href="#">
+                                                                    <img class="responsive-img circle"
+                                                                         src="{{ profile.image.url }}"
+                                                                         alt="">
+                                                                </a>
+                                                            </div>
+                                                            <div class="col s11">
+                                                                <a href="#">
+                                                                    <p class="m-0">
+                                                                        {{ profile.user.get_full_name }}
+                                                                        commented
+                                                                        on
+                                                                        <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post }}</a>
+                                                                        <span><i
+                                                                                class="material-icons vertical-align-bottom">access_time</i>{{ activity.created_at|timesince }}</span>
+                                                                    </p>
+                                                                </a>
+                                                                <div class="row">
+                                                                    <div class="col s12">
+                                                                        <div class="card card-border z-depth-2">
+                                                                            <div class="card-content">
+                                                                                <p class="grey-text">{{ activity.message }}</p>
+                                                                            </div>
+                                                                            <div class="social-icon">
+                                                                                <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>
+                                                                                {{ activity.replies.count }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="mt-5">
+                                                    {% elif activity.post %}
+                                                        <!--Display likes-->
+                                                        <div class="row mt-5">
+                                                            <div class="col s1 pr-0 circle">
+                                                                <a href="#">
+                                                                    <img class="responsive-img circle"
+                                                                         src="{{ profile.image.url }}"
+                                                                         alt=""></a>
+                                                            </div>
+                                                            <div class="col s11">
+                                                                <a href="#">
+                                                                    <p class="m-0">
+                                                                        {{ profile.user.get_full_name }}
+                                                                        liked
+                                                                        <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post }}</a>
+                                                                        <span><i
+                                                                                class="material-icons vertical-align-bottom">access_time</i>{{ activity.created_at|timesince }}</span>
+                                                                    </p>
+                                                                </a>
+                                                                <div class="row">
+                                                                    <div class="col s12">
+                                                                        <div class="card card-border z-depth-2">
+                                                                            <div class="card-content">
+                                                                                <div class="row">
+                                                                                    <div class="col s2 pr-0 circle">
+                                                                                        <a href="{% url 'blog:view_user' activity.post.author.user.username %}"><img
+                                                                                                class="responsive-img circle"
+                                                                                                src="{{ activity.post.author.image.url }}"
+                                                                                                alt=""></a>
+                                                                                    </div>
+                                                                                    <div class="col s10">
+                                                                                        <h6>
+                                                                                            Blog
+                                                                                            Post
+                                                                                            by
+                                                                                            <a href="{% url 'blog:view_user' activity.post.author.user.username %}">{{ activity.post.author }}</a>
+                                                                                        </h6>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr>
+                                                                                <div class="social-icon right">
+                                                                                    <span><i
+                                                                                            class="material-icons vertical-align-bottom mr-1">favorite_border</i> {{ activity.post.total_likes }}</span>
+                                                                                    <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>
+                                                                                    {{ activity.post.total_comments }}
+                                                                                    <span><i
+                                                                                            class="material-icons vertical-align-bottom ml-3 mr-1">redo</i> {{ activity.post.total_shares }}</span>
+                                                                                </div>
+                                                                                <h6 class="font-weight-900 text-uppercase">
+                                                                                    <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post.title }}</a>
+                                                                                </h6>
+                                                                                <p>{{ activity.post.content|safe|truncatewords_html:20 }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr class="mt-5">
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Highlight of the day-->
+                        <div class="col s12 m12 l3 hide-on-med-and-down">
+                            <div class="row mt-5">
+                                <div class="col s12">
+                                    <h6>Highlight of the day</h6>
+                                    <img class="responsive-img card-border z-depth-2 mt-2"
+                                         src="{% static 'img/sample-1.jpg' %}"
+                                         alt="">
+                                    <p>
+                                        <a href="{% url 'blog:view_post' highlight.id %}">
+                                            {{ highlight.title }}
+                                        </a>
+                                    </p>
+                                    <p>{{ highlight.content|safe|truncatewords_html:25 }}</p>
+                                </div>
+                            </div>
+                            <hr class="mt-5">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        const elems = document.querySelectorAll('.tabs');
+        var instance = M.Tabs.init(elems);
+    </script>
+{% endblock %}

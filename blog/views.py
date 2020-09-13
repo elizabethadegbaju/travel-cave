@@ -1,3 +1,6 @@
+from itertools import chain
+from operator import attrgetter
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -8,7 +11,8 @@ from google.cloud.language import enums
 from google.cloud.language import types
 
 from blog.forms import PostForm
-from blog.models import Profile, Post, Location, LocationReview, Tag
+from blog.models import Profile, Post, Location, LocationReview, Tag, \
+    PostLike, Comment
 
 
 def login_view(request):
@@ -163,3 +167,38 @@ def delete_post(request, pk):
     post = Post.objects.get(id=pk)
     post.delete()
     return redirect('blog:my_posts')
+
+
+def view_user(request, username):
+    profile = Profile.objects.get(user__username=username)
+    activities = get_user_activities_sorted(username)
+    blog_posts = Post.objects.filter(author=profile)
+    reviews = LocationReview.objects.filter(post__in=blog_posts)
+    highlight = Post.objects.filter(is_published=True).order_by('-created_at',
+                                                             '-total_likes',
+                                                             '-total_comments',
+                                                             '-total_shares').first()
+    return render(request, 'user.html',
+                  {'profile': profile, 'activities': activities,
+                   'reviews': reviews, 'highlight': highlight})
+
+
+def get_user_activities_sorted(username):
+    user = Profile.objects.get(user__username=username)
+    likes = PostLike.objects.filter(user=user)
+    comments = Comment.objects.filter(user=user)
+    posts = Post.objects.filter(author=user)
+    result_list = sorted(chain(likes, comments, posts),
+                         key=attrgetter('created_at'), reverse=True)
+    return result_list
+
+
+def follow_user(request, username):
+    profile = Profile.objects.get(user__username=username)
+    user = request.user
+    user.profile.users_following.add(profile)
+    return redirect('blog:view_user', username)
+
+
+def users(request):
+    return None

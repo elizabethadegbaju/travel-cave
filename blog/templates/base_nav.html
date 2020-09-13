@@ -9,7 +9,8 @@
             <ul class="right hide-on-med-and-down">
                 <li><a href="{% url 'blog:home' %}">Home</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="#">My Profile</a></li>
+                    <li><a href="{% url 'blog:view_user' user.username %}">My
+                        Profile</a></li>
                     <li><a href="{% url 'blog:create_post' %}">Create Post</a>
                     </li>
                     <li><a href="{% url 'blog:my_posts' %}">My Posts</a>

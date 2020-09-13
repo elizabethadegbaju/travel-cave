@@ -8,8 +8,6 @@ class PostForm(forms.ModelForm):
     content = forms.CharField(widget=SummernoteInplaceWidget())
 
     class Meta:
-        """
-        Meta options for Post Form
-        """
+        """Meta options for Post Form"""
         model = Post
         exclude = ('slug', 'author', 'is_published', 'locations', 'tags')

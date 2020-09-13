@@ -1,3 +1,1 @@
-"""
-Blog Module
-"""
+"""Blog Module"""

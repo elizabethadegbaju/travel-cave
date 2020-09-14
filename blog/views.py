@@ -176,6 +176,7 @@ def delete_post(request, pk):
 def view_user(request, username):
     profile = Profile.objects.get(user__username=username)
     activities = get_user_activities_sorted(username)
+    newsfeed = get_newsfeed_sorted(profile.users_following.all())
     blog_posts = Post.objects.filter(author=profile)
     reviews = LocationReview.objects.filter(post__in=blog_posts)
     highlight = Post.objects.filter(is_published=True).order_by('-created_at',
@@ -189,13 +190,15 @@ def view_user(request, username):
         '?')[:5]
     previous_login = parse_datetime(request.session['previous_login'])
     updates = LocationReview.objects.filter(
-        location__in=profile.locations_following.all(), post__is_published=True,
+        location__in=profile.locations_following.all(),
+        post__is_published=True,
         post__created_at__gt=previous_login).values('location').annotate(
         total=Count('location')).order_by('total')
     return render(request, 'user.html',
                   {'profile': profile, 'activities': activities,
                    'reviews': reviews, 'highlight': highlight,
-                   'recommended_users': recommended_users, 'updates': updates})
+                   'recommended_users': recommended_users, 'updates':
+                       updates, 'newsfeed': newsfeed})
 
 
 def get_user_activities_sorted(username):
@@ -203,6 +206,15 @@ def get_user_activities_sorted(username):
     likes = PostLike.objects.filter(user=user)
     comments = Comment.objects.filter(user=user)
     posts = Post.objects.filter(author=user)
+    result_list = sorted(chain(likes, comments, posts),
+                         key=attrgetter('created_at'), reverse=True)
+    return result_list
+
+
+def get_newsfeed_sorted(users_following):
+    likes = PostLike.objects.filter(user__in=users_following)
+    comments = Comment.objects.filter(user__in=users_following)
+    posts = Post.objects.filter(author__in=users_following)
     result_list = sorted(chain(likes, comments, posts),
                          key=attrgetter('created_at'), reverse=True)
     return result_list

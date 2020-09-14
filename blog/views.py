@@ -73,6 +73,7 @@ def register(request):
         password = request.POST['password']
         dob = request.POST['dob']
         username = request.POST['username']
+        image = request.FILES['image']
 
         user = User.objects.create_user(username=username, email=email,
                                         password=password,
@@ -80,7 +81,7 @@ def register(request):
                                         last_name=last_name)
         user.save()
 
-        user_profile = Profile.objects.create(DOB=dob, user=user)
+        user_profile = Profile.objects.create(DOB=dob, user=user, image=image)
         user_profile.save()
 
         return redirect('blog:home')
@@ -191,7 +192,7 @@ def view_user(request, username):
         locations_following__in=profile.locations_following.all())).order_by(
         '?')[:5]
     previous_login = parse_datetime(
-        request.session.get('previous_login', now()))
+        request.session.get('previous_login', now().isoformat()))
     updates = LocationReview.objects.filter(
         location__in=profile.locations_following.all(),
         post__is_published=True,

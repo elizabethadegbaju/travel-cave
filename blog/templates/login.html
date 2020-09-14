@@ -1,13 +1,27 @@
-{% extends 'base_nav.html' %}
+{% extends 'base.html' %}
 {% load static %}
 {% block title %}
     Login
+{% endblock %}
+{% block styles %}
+    <style>
+        body {
+            background-image: url({% static 'img/sample-1.jpg' %});
+            background-repeat: no-repeat;
+            background-size: cover;
+            align-items: center;
+        }
+
+        .bg-opacity {
+            background-color: rgba(255, 255, 255, .8)
+        }
+    </style>
 {% endblock %}
 {% block content %}
     <div class="section">
         <div class="row">
             <div class="col s12 m10 l4 offset-m1 offset-l4">
-                <div class="card-panel center-align">
+                <div class="card-panel bg-opacity">
                     <h4 class="card-title pink-text text-darken-2">Log In</h4>
                     <form action="{% url 'blog:login' %}" method="post">
                         {% csrf_token %}
@@ -17,18 +31,20 @@
                                        name="username">
                                 <label for="username">Username</label>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="input-field col s12">
                                 <input id="password" type="password" required
                                        name="password">
                                 <label for="password">Password</label>
                             </div>
                         </div>
-                        <button class="btn waves-effect waves-light"
-                                type="submit" name="action">Login
-                            <i class="material-icons right">send</i>
-                        </button>
+                        <div class="center-align">
+                            <button class="btn waves-effect waves-light"
+                                    type="submit" name="action">Login
+                                <i class="material-icons right">send</i>
+                            </button>
+                            <p><a href="{% url 'blog:register' %}">Don't
+                                have an account? Register</a></p>
+                        </div>
                     </form>
                 </div>
             </div>

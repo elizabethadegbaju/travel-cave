@@ -588,58 +588,57 @@
                             <div class="row">
                                 <div class="col s12">
                                     <h6>Who to follow</h6>
+                                    {% if recommended_users %}
+                                        {% for recommended_user in recommended_users %}
+                                            <div class="row mt-2">
+                                                <div class="col s2 mt-2 pr-0 circle">
+                                                    <a href="{% url 'blog:view_user' recommended_user.user.username %}"><img
+                                                            class="responsive-img circle"
+                                                            src="{{ recommended_user.image.url }}"
+                                                            alt=""></a>
+                                                </div>
+                                                <div class="col s9">
+                                                    <a href="{% url 'blog:view_user' recommended_user.user.username %}">
+                                                        <p class="m-0">{{ recommended_user.user.get_full_name }}</p>
+                                                    </a>
+                                                    <p class="m-0 grey-text lighten-3">{{ recommended_user.about|truncatewords:10 }}</p>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="row mt-2">
+                                            <div class="col s9">
+                                                <p class="m-0 grey-text">Start
+                                                    following users to see
+                                                    recommendations.</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
-                            {% if recommended_users %}
-                                {% for recommended_user in recommended_users %}
-                                    <div class="row mt-2">
-                                        <div class="col s2 mt-2 pr-0 circle">
-                                            <a href="{% url 'blog:view_user' recommended_user.user.username %}"><img
-                                                    class="responsive-img circle"
-                                                    src="{{ recommended_user.image.url }}"
-                                                    alt=""></a>
-                                        </div>
-                                        <div class="col s9">
-                                            <a href="{% url 'blog:view_user' recommended_user.user.username %}">
-                                                <p class="m-0">{{ recommended_user.user.get_full_name }}</p>
-                                            </a>
-                                            <p class="m-0 grey-text lighten-3">{{ recommended_user.about|truncatewords:10 }}</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="row mt-2">
-                                    <div class="col s9">
-                                        <p class="m-0 grey-text">Start
-                                            following users to see
-                                            recommendations.</p>
-                                    </div>
-                                </div>
-                            {% endif %}
                             <hr class="mt-5">
                             <div class="row">
                                 <div class="col s12">
                                     <h6>Latest Updates</h6>
-                                    <p class="latest-update">Make
-                                        Metronic<span class="right"> <a
-                                                href="#">+480</a> </span>
-                                    </p>
-                                    <p class="latest-update">Programming
-                                        Language <span class="right"> <a
-                                                href="#">+12</a> </span>
-                                    </p>
-                                    <p class="latest-update">Project
-                                        completed <span class="right"> <a
-                                                href="#">+570</a> </span>
-                                    </p>
-                                    <p class="latest-update">New Customer
-                                        <span class="right"><a
-                                                href="#">+120</a> </span>
-                                    </p>
-                                    <p class="latest-update">Annual
-                                        Companies<span class="right"> <a
-                                                href="#">+890</a> </span>
-                                    </p>
+                                    {% if updates %}
+                                        {% for update in updates %}
+                                            <p class="latest-update">
+                                                {{ update.location }}<span
+                                                    class="right"> <a href="#">+{{ update.total }}</a> </span>
+                                            </p>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="row mt-2">
+                                            <div class="col s9">
+                                                <p class="m-0 grey-text">No
+                                                    recent posts since your
+                                                    last login. Follow more
+                                                    locations to see new
+                                                    posts about them.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

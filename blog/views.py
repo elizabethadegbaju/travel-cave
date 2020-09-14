@@ -8,6 +8,7 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.dateparse import parse_datetime
+from django.utils.timezone import now
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
@@ -25,7 +26,8 @@ def login_view(request):
         if user is not None:
             last_login = user.last_login
             login(request, user)
-            request.session['previous_login'] = last_login.isoformat()
+            if last_login is not None:
+                request.session['previous_login'] = last_login.isoformat()
             return redirect('blog:home')
         else:
             # Return an 'invalid login' error message.
@@ -188,7 +190,8 @@ def view_user(request, username):
         users_following__in=profile.users_following.all()) | Profile.objects.filter(
         locations_following__in=profile.locations_following.all())).order_by(
         '?')[:5]
-    previous_login = parse_datetime(request.session['previous_login'])
+    previous_login = parse_datetime(
+        request.session.get('previous_login', now()))
     updates = LocationReview.objects.filter(
         location__in=profile.locations_following.all(),
         post__is_published=True,

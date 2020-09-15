@@ -178,9 +178,9 @@ def delete_post(request, pk):
 
 def view_user(request, username):
     profile = Profile.objects.get(user__username=username)
-    activities = get_user_activities_sorted(
-        username) if request.user.username == username else []
-    newsfeed = get_newsfeed_sorted(profile.users_following.all())
+    activities = get_user_activities_sorted(username)
+    newsfeed = get_newsfeed_sorted(
+        profile.users_following.all()) if request.user.username == username else []
     blog_posts = Post.objects.filter(author=profile)
     reviews = LocationReview.objects.filter(post__in=blog_posts)
     highlight = Post.objects.filter(is_published=True).order_by('-created_at',

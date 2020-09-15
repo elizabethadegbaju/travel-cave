@@ -73,12 +73,10 @@
                 <div class="section" id="user-profile">
                     <div class="row">
                         <!-- User Profile Feed -->
-                        <div class="col s12 m4 l3">
+                        <div class="col s12 m3 l2">
                             <div class="row">
                                 <div class="col s12 center-align">
                                     <img class="responsive-img circle z-depth-5"
-                                         width="200" style="height: 200px;
-                                         margin-bottom: 20px"
                                          src="{{ profile.image.url }}"
                                          alt="">
                                     <br>
@@ -159,22 +157,20 @@
                             </div>
                         </div>
                         <!-- User Activities -->
-                        <div class="col s12 m8 l6">
+                        <div class="col s12 m9 l7">
                             <div class="row">
-                                <div class="card" id="feed"
-                                     style="margin-left: 20px;margin-right: 20px">
+                                <div class="card user-card-negative-margin z-depth-0"
+                                     id="feed">
                                     <div class="card-content">
                                         <div class="row">
                                             <div class="col s12">
-                                                <h3 class="card-title pink-text text-darken-2">
-                                                    {{ profile.user.get_full_name }}</h3>
+                                                <h5>{{ profile.user.get_full_name }}</h5>
                                                 <p>{{ profile.about }}</p>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col s12">
-                                                <ul class="tabs mt-4"
-                                                    style="margin-bottom:20px">
+                                                <ul class="tabs mt-4">
                                                     {% if user.profile == profile %}
                                                         <li class="tab col m3 s6 p-0">
                                                             <a href="#newsfeed"
@@ -589,7 +585,7 @@
                                     <img class="responsive-img card-border z-depth-2 mt-2"
                                          src="{% static 'img/sample-1.jpg' %}"
                                          alt="">
-                                    <p>
+                                    <p class="font-weight-900 text-uppercase">
                                         <a href="{% url 'blog:view_post' highlight.id %}">
                                             {{ highlight.title }}
                                         </a>

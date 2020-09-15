@@ -231,5 +231,12 @@ def follow_user(request, username):
     return redirect('blog:view_user', username)
 
 
+def unfollow_user(request, username):
+    profile = Profile.objects.get(user__username=username)
+    user = request.user
+    user.profile.users_following.remove(profile)
+    return redirect('blog:view_user', username)
+
+
 def users(request):
     return None

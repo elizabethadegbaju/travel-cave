@@ -178,7 +178,8 @@ def delete_post(request, pk):
 
 def view_user(request, username):
     profile = Profile.objects.get(user__username=username)
-    activities = get_user_activities_sorted(username)
+    activities = get_user_activities_sorted(
+        username) if request.user.username == username else []
     newsfeed = get_newsfeed_sorted(profile.users_following.all())
     blog_posts = Post.objects.filter(author=profile)
     reviews = LocationReview.objects.filter(post__in=blog_posts)
@@ -189,8 +190,8 @@ def view_user(request, username):
     # recommend users who follow the same content
     recommended_users = (Profile.objects.filter(
         users_following__in=profile.users_following.all()) | Profile.objects.filter(
-        locations_following__in=profile.locations_following.all())).order_by(
-        '?')[:5]
+        locations_following__in=profile.locations_following.all())).exclude(
+        user=request.user).order_by('?')[:5]
     previous_login = parse_datetime(
         request.session.get('previous_login', now().isoformat()))
     updates = LocationReview.objects.filter(

@@ -82,9 +82,17 @@
                                          src="{{ profile.image.url }}"
                                          alt="">
                                     <br>
-                                    <a class="waves-effect waves-light btn mt-5"
-                                       href="{% url 'blog:follow_user' profile.user.username %}">
-                                        Follow</a>
+                                    {% if not user.profile == profile %}
+                                        {% if profile in user.profile.users_following.all %}
+                                            <a class="waves-effect waves-light btn mt-5"
+                                               href="{% url 'blog:unfollow_user' profile.user.username %}">
+                                                Unfollow</a>
+                                        {% else %}
+                                            <a class="waves-effect waves-light btn mt-5"
+                                               href="{% url 'blog:follow_user' profile.user.username %}">
+                                                Follow</a>
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row mt-5 center-align">
@@ -167,35 +175,37 @@
                                             <div class="col s12">
                                                 <ul class="tabs mt-4"
                                                     style="margin-bottom:20px">
+                                                    {% if user.profile == profile %}
+                                                        <li class="tab col m3 s6 p-0">
+                                                            <a href="#newsfeed"
+                                                               class="active">
+                                                                <i class="material-icons vertical-align-middle">bookmarks</i>
+                                                                Newsfeed
+                                                            </a></li>
+                                                    {% endif %}
                                                     <li class="tab col m3 s6 p-0">
-                                                        <a href="#timeline"
-                                                           class="active">
+                                                        <a href="#timeline">
                                                             <i class="material-icons vertical-align-middle">insert_comment</i>
                                                             Activities
                                                         </a></li>
-                                                    <li class="tab col m3 s6 p-0">
-                                                        <a href="#newsfeed">
-                                                            <i class="material-icons vertical-align-middle">bookmarks</i>
-                                                            Newsfeed
-                                                        </a></li>
                                                 </ul>
                                             </div>
-                                            <div id="timeline"
+                                            <div id="newsfeed"
                                                  class="col s12">
-                                                {% for activity in activities %}
+                                                {% for activity in newsfeed %}
                                                     {% if activity.is_published %}
                                                         <!--Display Blog Posts-->
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
-                                                                <a href="#">
+                                                                <a href="{% url 'blog:view_user' activity.author.user.username %}">
                                                                     <img class="responsive-img circle"
-                                                                         src="{{ profile.image.url }}"
+                                                                         src="{{ activity.author.image.url }}"
                                                                          alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="col s11">
-                                                                <a href="#">
-                                                                    <p class="m-0">{{ profile.user.get_full_name }}
+                                                                <a href="{% url 'blog:view_user' activity.author.user.username %}">
+                                                                    <p class="m-0">{{ activity.author.user.get_full_name }}
                                                                         published
                                                                         <span>
                                                                 <i class="material-icons vertical-align-bottom">access_time</i>
@@ -278,16 +288,16 @@
                                                         <!--Display Comments-->
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
-                                                                <a href="#">
+                                                                <a href="{% url 'blog:view_user' activity.user.user.username %}">
                                                                     <img class="responsive-img circle"
-                                                                         src="{{ profile.image.url }}"
+                                                                         src="{{ activity.user.image.url }}"
                                                                          alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="col s11">
-                                                                <a href="#">
+                                                                <a href="{% url 'blog:view_user' activity.user.user.username %}">
                                                                     <p class="m-0">
-                                                                        {{ profile.user.get_full_name }}
+                                                                        {{ activity.user.user.get_full_name }}
                                                                         commented
                                                                         on
                                                                         <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post }}</a>
@@ -315,15 +325,15 @@
                                                         <!--Display likes-->
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
-                                                                <a href="#">
+                                                                <a href="{% url 'blog:view_user' activity.user.user.username %}">
                                                                     <img class="responsive-img circle"
-                                                                         src="{{ profile.image.url }}"
+                                                                         src="{{ activity.user.image.url }}"
                                                                          alt=""></a>
                                                             </div>
                                                             <div class="col s11">
-                                                                <a href="#">
+                                                                <a href="{% url 'blog:view_user' activity.user.user.username %}">
                                                                     <p class="m-0">
-                                                                        {{ profile.user.get_full_name }}
+                                                                        {{ activity.user.user.get_full_name }}
                                                                         liked
                                                                         <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post }}</a>
                                                                         <span><i
@@ -373,9 +383,9 @@
                                                     {% endif %}
                                                 {% endfor %}
                                             </div>
-                                            <div id="newsfeed"
+                                            <div id="timeline"
                                                  class="col s12">
-                                                {% for activity in newsfeed %}
+                                                {% for activity in activities %}
                                                     {% if activity.is_published %}
                                                         <!--Display Blog Posts-->
                                                         <div class="row mt-5">

@@ -36,4 +36,5 @@ urlpatterns = [
          name='unfollow_user'),
     path('users/<str:username>/', views.view_user, name='view_user'),
     path('users/', views.users, name='users'),
+    path('locations/<int:pk>/', views.view_location, name='view_location')
 ]

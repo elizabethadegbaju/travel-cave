@@ -1,4 +1,4 @@
-{% extends 'base_nav.html' %}
+{% extends 'extended_nav.html' %}
 {% load static %}
 {% load humanize %}
 {% block title %}
@@ -12,59 +12,13 @@
         }
     </style>
 {% endblock %}
-{% block nav %}
-    <nav class="nav-extended">
-        <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Travel Cave</a>
-            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i
-                    class="material-icons">menu</i></a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="{% url 'blog:home' %}">Home</a></li>
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'blog:view_user' user.username %}">My
-                        Profile</a></li>
-                    <li><a href="{% url 'blog:create_post' %}">Create Post</a>
-                    </li>
-                    <li><a href="{% url 'blog:my_posts' %}">My Posts</a>
-                    </li>
-                    <li><a href="{% url 'blog:logout' %}">Logout</a></li>
-                {% else %}
-                    <li><a href="{% url 'blog:login' %}">Login</a></li>
-                    <li><a href="{% url 'blog:register' %}">Register</a></li>
-                {% endif %}
-            </ul>
-        </div>
-        <div class="nav-content">
-            <div class="pb-0 pt-4">
-                <nav>
-                    <div class="nav-wrapper">
-                        <div class="col s12">
-                            <a href="{% url 'blog:home' %}"
-                               class="breadcrumb">Home</a>
-                            <a href="{% url 'blog:users' %}"
-                               class="breadcrumb">Users</a>
-                            <a href="#" class="breadcrumb">
-                                {{ profile.user.username }}</a>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-        </div>
-    </nav>
-    <ul class="sidenav" id="mobile-demo">
-        <li><a href="{% url 'blog:home' %}">Home</a></li>
-        {% if user.is_authenticated %}
-            <li><a href="#">My Profile</a></li>
-            <li><a href="{% url 'blog:create_post' %}">Create Post</a>
-            </li>
-            <li><a href="{% url 'blog:my_posts' %}">My Posts</a>
-            </li>
-            <li><a href="{% url 'blog:logout' %}">Logout</a></li>
-        {% else %}
-            <li><a href="{% url 'blog:login' %}">Login</a></li>
-            <li><a href="{% url 'blog:register' %}">Register</a></li>
-        {% endif %}
-    </ul>
+{% block breadcrumbs %}
+    <a href="{% url 'blog:home' %}"
+       class="breadcrumb">Home</a>
+    <a href="{% url 'blog:users' %}"
+       class="breadcrumb">Users</a>
+    <a href="#" class="breadcrumb">
+        {{ profile.user.username }}</a>
 {% endblock %}
 {% block content %}
     <div class="row">
@@ -260,12 +214,14 @@
                                                                                             <p class="pink-text text-darken-2">
                                                                                                 <em>
                                                                                                     {% for location in activity.locations.all %}
-                                                                                                        {% if forloop.last %}
-                                                                                                            {{ location|capfirst }}
-                                                                                                        {% else %}
-                                                                                                            {{ location|capfirst }}
-                                                                                                            ,
-                                                                                                        {% endif %}
+                                                                                                        <a href="{% url 'blog:view_location' location.id %}">
+                                                                                                            {% if forloop.last %}
+                                                                                                                {{ location|capfirst }}
+                                                                                                            {% else %}
+                                                                                                                {{ location|capfirst }}
+                                                                                                                ,
+                                                                                                            {% endif %}
+                                                                                                        </a>
                                                                                                     {% endfor %}
                                                                                                 </em>
                                                                                             </p>
@@ -453,12 +409,14 @@
                                                                                             <p class="pink-text text-darken-2">
                                                                                                 <em>
                                                                                                     {% for location in activity.locations.all %}
-                                                                                                        {% if forloop.last %}
-                                                                                                            {{ location|capfirst }}
-                                                                                                        {% else %}
-                                                                                                            {{ location|capfirst }}
-                                                                                                            ,
-                                                                                                        {% endif %}
+                                                                                                        <a href="{% url 'blog:view_location' location.id %}">
+                                                                                                            {% if forloop.last %}
+                                                                                                                {{ location|capfirst }}
+                                                                                                            {% else %}
+                                                                                                                {{ location|capfirst }}
+                                                                                                                ,
+                                                                                                            {% endif %}
+                                                                                                        </a>
                                                                                                     {% endfor %}
                                                                                                 </em>
                                                                                             </p>
@@ -633,7 +591,9 @@
                                         {% for update in updates %}
                                             <p class="latest-update">
                                                 {{ update.location }}<span
-                                                    class="right"> <a href="#">+{{ update.total }}</a> </span>
+                                                    class="right"> <a
+                                                    href="{% url 'blog:view_location' update.location.id %}">
+                                                +{{ update.total }}</a> </span>
                                             </p>
                                         {% endfor %}
                                     {% else %}

@@ -241,3 +241,10 @@ def unfollow_user(request, username):
 
 def users(request):
     return None
+
+
+def view_location(request, pk):
+    location = Location.objects.get(id=pk)
+    reviews = LocationReview.objects.filter(location=location)
+    return render(request, 'location.html',
+                  {'location': location, 'reviews': reviews})

@@ -41,7 +41,10 @@ def index(request):
 
 
 def view_post(request, pk):
-    return render(request, '')
+    post = Post.objects.get(id=pk)
+    profile = post.author
+    return render(request, 'view_post.html',
+                  {'post': post, 'profile': profile})
 
 
 @login_required

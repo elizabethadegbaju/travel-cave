@@ -1,0 +1,155 @@
+{% extends 'extended_nav.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}
+    {{ post.title }}
+{% endblock %}
+{% block styles %}
+    <style>
+        .image-container {
+            max-height: 100px;
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+{% block breadcrumbs %}
+    <a href="{% url 'blog:home' %}"
+       class="breadcrumb">Home</a>
+    <a href="{% url 'blog:home' %}"
+       class="breadcrumb">Blog</a>
+    <a href="{% url 'blog:view_user' profile.user.username %}"
+       class="breadcrumb">{{ profile.user.username }}</a>
+    <a href="#" class="breadcrumb">
+        {{ post.title }}</a>
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col s12">
+            <div class="section">
+                <div class="section" id="user-profile">
+                    <div class="row">
+                        <!--Author Profile-->
+                        <div class="col s12 m3 l3">
+                            <div class="row">
+                                <div class="col s12 center-align">
+                                    <img class="responsive-img circle z-depth-5"
+                                         src="{{ profile.image.url }}"
+                                         alt="">
+                                    <br>
+                                    {% if not user.profile == profile %}
+                                        {% if profile in user.profile.users_following.all %}
+                                            <a class="waves-effect waves-light btn mt-5"
+                                               href="{% url 'blog:unfollow_user' profile.user.username %}">
+                                                Unfollow</a>
+                                        {% else %}
+                                            <a class="waves-effect waves-light btn mt-5"
+                                               href="{% url 'blog:follow_user' profile.user.username %}">
+                                                Follow</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mt-5 center-align">
+                                <div class="col s6">
+                                    <h6>Followers</h6>
+                                    <h5 class="m-0"><a href="#">
+                                        {{ profile.followers.count }}</a>
+                                    </h5>
+                                </div>
+                                <div class="col s6">
+                                    <h6>Following</h6>
+                                    <h5 class="m-0"><a href="#">
+                                        {{ profile.users_following.count }}</a>
+                                    </h5>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row user-projects">
+                                <h6 class="col s12">More posts by this
+                                    author</h6>
+                                {% for post in profile.blog_posts.all %}
+                                    <div class="col s4">
+                                        <a href="{% url 'blog:view_post' post.id %}">
+                                            <img class="responsive-img photo-border mt-10"
+                                                 alt=""
+                                                 src="{% static 'img/sample-1.jpg' %}">
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <hr class="mt-5">
+                            <div class="row">
+                                <div class="col s12">
+                                    <h6>Locations reviewed in this post</h6>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="collection">
+                                    {% for review in post.locationreview_set.all %}
+                                        <a href="{% url 'blog:view_post' review.post.id %}"
+                                           class="collection-item">
+                                            {{ review.location|capfirst }}
+                                            {% if review.sentiment >= 0.25 %}
+                                                <br><span class="green-text">
+                                                    Positive Opinion
+                                                </span>
+                                            {% elif review.sentiment <= -0.25 %}
+                                                <br><span class="red-text">>
+                                                    Negative Opinion
+                                                </span>
+                                            {% elif review.magnitude >= 0.2 %}
+                                                <br><span class="amber-text">
+                                                    Mixed Opinion
+                                                </span>
+                                            {% else %}
+                                                <br><span class="grey-text">
+                                                    Neutral
+                                                </span>
+                                            {% endif %}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <!--Blog Post-->
+                        <div class="col s12 m9 l9">
+                            <div class="row">
+                                <div class="card z-depth-0" id="feed">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <h5>{{ post.title }}</h5>
+                                                <p>
+                                                    published {{ post.created_at }}
+                                                    by {{ post.author.user.get_full_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card z-depth-0" id="feed">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="col s12">
+                                                {{ post.content|safe }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        const elems = document.querySelectorAll('.tabs');
+        var instance = M.Tabs.init(elems);
+    </script>
+{% endblock %}

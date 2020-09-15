@@ -2,48 +2,48 @@
 {% load static %}
 {% load humanize %}
 {% block title %}
-    {{ location }}
+    {{ tag }}
 {% endblock %}
 {% block breadcrumbs %}
     <a href="{% url 'blog:home' %}"
        class="breadcrumb">Home</a>
     <a href="{% url 'blog:home' %}"
-       class="breadcrumb">Locations</a>
+       class="breadcrumb">Tags</a>
     <a href="#" class="breadcrumb">
-        {{ location }}</a>
+        {{ tag }}</a>
 {% endblock %}
 {% block content %}
     <div class="row">
         <div class="col s12">
             <div class="section mt-2" id="blog-list">
                 <div class="row">
-                    {% for review in reviews %}
+                    {% for post in posts %}
                         <div class="col s12 m4 l3">
                             <div class="card-panel border-radius-6 mt-10 card-animation-1">
-                                <a href="{% url 'blog:view_post' review.post.id %}">
+                                <a href="{% url 'blog:view_post' post.id %}">
                                     <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
                                          src="{% static 'img/sample-1.jpg' %}"
                                          alt=""></a>
                                 <h6 class="t-5">
                                     <b><a class="text-uppercase"
-                                          href="{% url 'blog:view_post' review.post.id %}">{{ review.post.title }}</a></b>
+                                          href="{% url 'blog:view_post' post.id %}">{{ post.title }}</a></b>
                                 </h6>
-                                <span>{{ review.post.content|safe|truncatewords_html:25 }}</span>
+                                <span>{{ post.content|safe|truncatewords_html:25 }}</span>
                                 <div class="display-flex justify-content-between flex-wrap mt-4">
                                     <div class="display-flex align-items-center mt-1">
-                                        <img src="{{ review.post.author.image.url }}"
+                                        <img src="{{ post.author.image.url }}"
                                              width="30" alt="fashion"
                                              class="circle mr-10 vertical-text-middle">
                                         <span class="pt-2">
-                                            {{ review.post.author.user.username }}</span>
+                                            {{ post.author.user.username }}</span>
                                     </div>
                                     <div class="display-flex mt-3 right-align social-icon">
                                         <span class="material-icons">favorite_border</span>
-                                        <span class="ml-3 vertical-align-top">{{ review.post.total_likes }}</span>
+                                        <span class="ml-3 vertical-align-top">{{ post.total_likes }}</span>
                                         <span class="material-icons ml-10">chat_bubble_outline</span>
-                                        <span class="ml-3 vertical-align-top">{{ review.post.total_comments }}</span>
-{#                                        <span class="material-icons ml-10">share</span>#}
-{#                                        <span class="ml-3 vertical-align-top">{{ review.post.total_shares }}</span>#}
+                                        <span class="ml-3 vertical-align-top">{{ post.total_comments }}</span>
+                                        {#                                        <span class="material-icons ml-10">share</span>#}
+                                        {#                                        <span class="ml-3 vertical-align-top">{{ post.total_shares }}</span>#}
                                     </div>
                                 </div>
                             </div>

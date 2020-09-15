@@ -248,3 +248,10 @@ def view_location(request, pk):
     reviews = LocationReview.objects.filter(location=location)
     return render(request, 'location.html',
                   {'location': location, 'reviews': reviews})
+
+
+def view_tag(request, pk):
+    tag = Tag.objects.get(id=pk)
+    posts = tag.blog_posts.all()
+    return render(request, 'tag.html',
+                  {'tag': tag, 'posts': posts})

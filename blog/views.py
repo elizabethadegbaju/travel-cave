@@ -242,6 +242,20 @@ def unfollow_user(request, username):
     return redirect('blog:view_user', username)
 
 
+def follow_location(request, pk):
+    location = Location.objects.get(id=pk)
+    user = request.user
+    user.profile.locations_following.add(location)
+    return redirect('blog:view_location', pk)
+
+
+def unfollow_location(request, pk):
+    location = Location.objects.get(id=pk)
+    user = request.user
+    user.profile.locations_following.remove(location)
+    return redirect('blog:view_location', pk)
+
+
 def users(request):
     return None
 

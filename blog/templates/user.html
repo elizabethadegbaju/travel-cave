@@ -30,7 +30,7 @@
                         <div class="col s12 m3 l2">
                             <div class="row">
                                 <div class="col s12 center-align">
-                                    <img class="responsive-img circle z-depth-5"
+                                    <img class="responsive-img responsive-img-big circle z-depth-5"
                                          src="{{ profile.image.url }}"
                                          alt="">
                                     <br>
@@ -148,7 +148,7 @@
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="{% url 'blog:view_user' activity.author.user.username %}">
-                                                                    <img class="responsive-img circle"
+                                                                    <img class="responsive-img responsive-img-small circle"
                                                                          src="{{ activity.author.image.url }}"
                                                                          alt="">
                                                                 </a>
@@ -243,7 +243,7 @@
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="{% url 'blog:view_user' activity.user.user.username %}">
-                                                                    <img class="responsive-img circle"
+                                                                    <img class="responsive-img responsive-img-small circle"
                                                                          src="{{ activity.user.image.url }}"
                                                                          alt="">
                                                                 </a>
@@ -280,7 +280,7 @@
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="{% url 'blog:view_user' activity.user.user.username %}">
-                                                                    <img class="responsive-img circle"
+                                                                    <img class="responsive-img  responsive-img-small circle"
                                                                          src="{{ activity.user.image.url }}"
                                                                          alt=""></a>
                                                             </div>
@@ -300,10 +300,10 @@
                                                                             <div class="card-content">
                                                                                 <div class="row">
                                                                                     <div class="col s2 pr-0 circle">
-                                                                                        <a href="{% url 'blog:view_user' activity.post.author.user.username %}"><img
-                                                                                                class="responsive-img circle"
-                                                                                                src="{{ activity.post.author.image.url }}"
-                                                                                                alt=""></a>
+                                                                                        <a href="{% url 'blog:view_user' activity.post.author.user.username %}">
+                                                                                            <img class="responsive-img  responsive-img-small circle"
+                                                                                                 src="{{ activity.post.author.image.url }}"
+                                                                                                 alt=""></a>
                                                                                     </div>
                                                                                     <div class="col s10">
                                                                                         <h6>
@@ -345,7 +345,7 @@
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="#">
-                                                                    <img class="responsive-img circle"
+                                                                    <img class="responsive-img responsive-img-small circle"
                                                                          src="{{ profile.image.url }}"
                                                                          alt="">
                                                                 </a>
@@ -440,7 +440,7 @@
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="#">
-                                                                    <img class="responsive-img circle"
+                                                                    <img class="responsive-img responsive-img-small circle"
                                                                          src="{{ profile.image.url }}"
                                                                          alt="">
                                                                 </a>
@@ -477,7 +477,7 @@
                                                         <div class="row mt-5">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="#">
-                                                                    <img class="responsive-img circle"
+                                                                    <img class="responsive-img  responsive-img-small circle"
                                                                          src="{{ profile.image.url }}"
                                                                          alt=""></a>
                                                             </div>
@@ -497,10 +497,10 @@
                                                                             <div class="card-content">
                                                                                 <div class="row">
                                                                                     <div class="col s2 pr-0 circle">
-                                                                                        <a href="{% url 'blog:view_user' activity.post.author.user.username %}"><img
-                                                                                                class="responsive-img circle"
-                                                                                                src="{{ activity.post.author.image.url }}"
-                                                                                                alt=""></a>
+                                                                                        <a href="{% url 'blog:view_user' activity.post.author.user.username %}">
+                                                                                            <img class="responsive-img responsive-img-small circle"
+                                                                                                 src="{{ activity.post.author.image.url }}"
+                                                                                                 alt=""></a>
                                                                                     </div>
                                                                                     <div class="col s10">
                                                                                         <h6>
@@ -563,10 +563,11 @@
                                         {% for recommended_user in recommended_users %}
                                             <div class="row mt-2">
                                                 <div class="col s2 mt-2 pr-0 circle">
-                                                    <a href="{% url 'blog:view_user' recommended_user.user.username %}"><img
-                                                            class="responsive-img circle"
-                                                            src="{{ recommended_user.image.url }}"
-                                                            alt=""></a>
+                                                    <a href="{% url 'blog:view_user' recommended_user.user.username %}">
+                                                        <img class="responsive-img responsive-img-small circle"
+                                                             src="{{ recommended_user.image.url }}"
+                                                             alt="">
+                                                    </a>
                                                 </div>
                                                 <div class="col s9">
                                                     <a href="{% url 'blog:view_user' recommended_user.user.username %}">

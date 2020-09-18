@@ -12,4 +12,5 @@ class PostForm(forms.ModelForm):
         Meta options for Post Form
         """
         model = Post
-        exclude = ('slug', 'author', 'is_published', 'locations', 'tags')
+        exclude = ('slug', 'author', 'is_published', 'locations', 'tags',
+                   'total_comments', 'total_likes', 'total_shares')

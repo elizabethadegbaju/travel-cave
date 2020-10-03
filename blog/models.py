@@ -4,6 +4,8 @@ from django.db import models
 
 
 # Create your models here.
+from django.urls import reverse
+
 
 def profile_image(instance, filename):
     """
@@ -91,6 +93,13 @@ class Post(models.Model):
         :return: self.title by self.author
         """
         return f'{self.title} by {str(self.author)}'
+
+    def get_absolute_url(self):
+        """
+        Post model url
+        :return: absolute url of the post
+        """
+        return reverse('blog:view_post', kwargs={'pk': self.pk})
 
 
 class PostLike(models.Model):

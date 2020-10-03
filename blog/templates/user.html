@@ -1,6 +1,7 @@
 {% extends 'extended_nav.html' %}
 {% load static %}
 {% load humanize %}
+{% load social_share %}
 {% block title %}
     {{ profile.user.get_full_name }}
 {% endblock %}
@@ -157,9 +158,8 @@
                                                                 <a href="{% url 'blog:view_user' activity.author.user.username %}">
                                                                     <p class="m-0">{{ activity.author.user.get_full_name }}
                                                                         published
-                                                                        <span>
-                                                                <i class="material-icons vertical-align-bottom">access_time</i>
-                                                                            {{ activity.created_at|timesince }}</span>
+                                                                        <span><i
+                                                                                class="material-icons vertical-align-bottom">access_time</i>{{ activity.created_at|timesince }}</span>
                                                                         ago
                                                                     </p>
                                                                 </a>
@@ -173,12 +173,51 @@
                                                                             </div>
                                                                             <div class="card-content">
                                                                                 <div>
+                                                                                    <ul id="dropdownshare"
+                                                                                        class="dropdown-content">
+                                                                                        <li>
+                                                                                            <i class="material-icons left">facebook</i>
+                                                                                            {% post_to_facebook activity 'Share on Facebook' %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_twitter 'Check out this post on Travel Cave!' activity 'Share on Twitter' %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_linkedin activity %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_reddit 'Check out this post on Travel Cave!' activity 'Share on Reddit' %}
+                                                                                        </li>
+                                                                                        <li class="divider"></li>
+                                                                                        <li>
+                                                                                            {% send_email activity.title 'Check out this post on Travel Cave!' activity 'Send as Email' %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_telegram 'Check out this post on Travel Cave!' activity 'Share on Telegram' %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_whatsapp activity 'Share on WhatsApp' %}
+                                                                                        </li>
+                                                                                    </ul>
                                                                                     <div class="social-icon right">
-                                                                            <span><i
-                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span>
-                                                                                        <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.total_comments }}
-                                                                                        <span><i
-                                                                                                class="material-icons vertical-align-bottom ml-3 mr-1">share</i>{{ activity.total_shares }}</span>
+                                                                                        {% for liked in activity.postlike_set.all %}
+                                                                                            {% if liked.user == profile %}
+                                                                                                <a href="{% url 'blog:unlike_post' activity.id %}"><span><i
+                                                                                                        class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.total_likes }}</span></a>
+                                                                                            {% else %}
+                                                                                                <a href="{% url 'blog:like_post' activity.id %}"><span><i
+                                                                                                        class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span></a>
+                                                                                            {% endif %}
+                                                                                        {% empty %}
+                                                                                            <a href="{% url 'blog:like_post' activity.id %}"><span><i
+                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span></a>
+                                                                                        {% endfor %}
+                                                                                        <a href="#"><span><i
+                                                                                                class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.total_comments }}</span></a>
+                                                                                        <a class="dropdown-trigger"
+                                                                                           href="#!"
+                                                                                           data-target="dropdownshare"><span><i
+                                                                                                class="material-icons vertical-align-bottom ml-3 mr-1">share</i>{{ activity.total_shares }}</span></a>
                                                                                     </div>
                                                                                     <h6 class="font-weight-900 text-uppercase">
                                                                                         <a href="{% url 'blog:view_post' activity.id %}">{{ activity.title }}</a>
@@ -315,13 +354,51 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <hr>
+                                                                                <ul id="dropdownshare"
+                                                                                    class="dropdown-content">
+                                                                                    <li>
+                                                                                        <i class="material-icons left">facebook</i>
+                                                                                        {% post_to_facebook activity.post 'Share on Facebook' %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_twitter 'Check out this post on Travel Cave!' activity.post 'Share on Twitter' %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_linkedin activity.post %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_reddit 'Check out this post on Travel Cave!' activity.post 'Share on Reddit' %}
+                                                                                    </li>
+                                                                                    <li class="divider"></li>
+                                                                                    <li>
+                                                                                        {% send_email activity.post.title 'Check out this post on Travel Cave!' activity.post 'Send as Email' %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_telegram 'Check out this post on Travel Cave!' activity.post 'Share on Telegram' %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_whatsapp activity.post 'Share on WhatsApp' %}
+                                                                                    </li>
+                                                                                </ul>
                                                                                 <div class="social-icon right">
-                                                                                    <span><i
-                                                                                            class="material-icons vertical-align-bottom mr-1">favorite_border</i> {{ activity.post.total_likes }}</span>
-                                                                                    <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>
-                                                                                    {{ activity.post.total_comments }}
-                                                                                    <span><i
-                                                                                            class="material-icons vertical-align-bottom ml-3 mr-1">redo</i> {{ activity.post.total_shares }}</span>
+                                                                                    {% for liked in activity.post.postlike_set.all %}
+                                                                                        {% if liked.user == profile %}
+                                                                                            <a href="{% url 'blog:unlike_post' activity.post.id %}"><span><i
+                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.post.total_likes }}</span></a>
+                                                                                        {% else %}
+                                                                                            <a href="{% url 'blog:like_post' activity.post.id %}"><span><i
+                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.post.total_likes }}</span></a>
+                                                                                        {% endif %}
+                                                                                    {% empty %}
+                                                                                        <a href="{% url 'blog:like_post' activity.post.id %}"><span><i
+                                                                                                class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.post.total_likes }}</span></a>
+                                                                                    {% endfor %}
+                                                                                    <a href="#"><span><i
+                                                                                            class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.post.total_comments }}</span></a>
+                                                                                    <a class="dropdown-trigger"
+                                                                                       href="#!"
+                                                                                       data-target="dropdownshare"><span><i
+                                                                                            class="material-icons vertical-align-bottom ml-3 mr-1">share</i>{{ activity.post.total_shares }}</span></a>
                                                                                 </div>
                                                                                 <h6 class="font-weight-900 text-uppercase">
                                                                                     <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post.title }}</a>
@@ -370,12 +447,51 @@
                                                                             </div>
                                                                             <div class="card-content">
                                                                                 <div>
+                                                                                    <ul id="dropdownshare"
+                                                                                        class="dropdown-content">
+                                                                                        <li>
+                                                                                            <i class="material-icons left">facebook</i>
+                                                                                            {% post_to_facebook activity 'Share on Facebook' %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_twitter 'Check out this post on Travel Cave!' activity 'Share on Twitter' %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_linkedin activity %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_reddit 'Check out this post on Travel Cave!' activity 'Share on Reddit' %}
+                                                                                        </li>
+                                                                                        <li class="divider"></li>
+                                                                                        <li>
+                                                                                            {% send_email activity.title 'Check out this post on Travel Cave!' activity 'Send as Email' %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_telegram 'Check out this post on Travel Cave!' activity 'Share on Telegram' %}
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            {% post_to_whatsapp activity 'Share on WhatsApp' %}
+                                                                                        </li>
+                                                                                    </ul>
                                                                                     <div class="social-icon right">
-                                                                            <span><i
-                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span>
-                                                                                        <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.total_comments }}
-                                                                                        <span><i
-                                                                                                class="material-icons vertical-align-bottom ml-3 mr-1">share</i>{{ activity.total_shares }}</span>
+                                                                                        {% for liked in activity.postlike_set.all %}
+                                                                                            {% if liked.user == profile %}
+                                                                                                <a href="{% url 'blog:unlike_post' activity.id %}"><span><i
+                                                                                                        class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.total_likes }}</span></a>
+                                                                                            {% else %}
+                                                                                                <a href="{% url 'blog:like_post' activity.id %}"><span><i
+                                                                                                        class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span></a>
+                                                                                            {% endif %}
+                                                                                        {% empty %}
+                                                                                            <a href="{% url 'blog:like_post' activity.id %}"><span><i
+                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span></a>
+                                                                                        {% endfor %}
+                                                                                        <a href="#"><span><i
+                                                                                                class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.total_comments }}</span></a>
+                                                                                        <a class="dropdown-trigger"
+                                                                                           href="#!"
+                                                                                           data-target="dropdownshare"><span><i
+                                                                                                class="material-icons vertical-align-bottom ml-3 mr-1">share</i>{{ activity.total_shares }}</span></a>
                                                                                     </div>
                                                                                     <h6 class="font-weight-900 text-uppercase">
                                                                                         <a href="{% url 'blog:view_post' activity.id %}">{{ activity.title }}</a>
@@ -512,13 +628,51 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 <hr>
+                                                                                <ul id="dropdownshare"
+                                                                                    class="dropdown-content">
+                                                                                    <li>
+                                                                                        <i class="material-icons left">facebook</i>
+                                                                                        {% post_to_facebook activity.post 'Share on Facebook' %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_twitter 'Check out this post on Travel Cave!' activity.post 'Share on Twitter' %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_linkedin activity.post %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_reddit 'Check out this post on Travel Cave!' activity.post 'Share on Reddit' %}
+                                                                                    </li>
+                                                                                    <li class="divider"></li>
+                                                                                    <li>
+                                                                                        {% send_email activity.post.title 'Check out this post on Travel Cave!' activity.post 'Send as Email' %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_telegram 'Check out this post on Travel Cave!' activity.post 'Share on Telegram' %}
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        {% post_to_whatsapp activity.post 'Share on WhatsApp' %}
+                                                                                    </li>
+                                                                                </ul>
                                                                                 <div class="social-icon right">
-                                                                                    <span><i
-                                                                                            class="material-icons vertical-align-bottom mr-1">favorite_border</i> {{ activity.post.total_likes }}</span>
-                                                                                    <i class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>
-                                                                                    {{ activity.post.total_comments }}
-                                                                                    <span><i
-                                                                                            class="material-icons vertical-align-bottom ml-3 mr-1">redo</i> {{ activity.post.total_shares }}</span>
+                                                                                    {% for liked in activity.post.postlike_set.all %}
+                                                                                        {% if liked.user == profile %}
+                                                                                            <a href="{% url 'blog:unlike_post' activity.post.id %}"><span><i
+                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.post.total_likes }}</span></a>
+                                                                                        {% else %}
+                                                                                            <a href="{% url 'blog:like_post' activity.post.id %}"><span><i
+                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.post.total_likes }}</span></a>
+                                                                                        {% endif %}
+                                                                                    {% empty %}
+                                                                                        <a href="{% url 'blog:like_post' activity.post.id %}"><span><i
+                                                                                                class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.post.total_likes }}</span></a>
+                                                                                    {% endfor %}
+                                                                                    <a href="#"><span><i
+                                                                                            class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.post.total_comments }}</span></a>
+                                                                                    <a class="dropdown-trigger"
+                                                                                       href="#!"
+                                                                                       data-target="dropdownshare"><span><i
+                                                                                            class="material-icons vertical-align-bottom ml-3 mr-1">share</i>{{ activity.post.total_shares }}</span></a>
                                                                                 </div>
                                                                                 <h6 class="font-weight-900 text-uppercase">
                                                                                     <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post.title }}</a>

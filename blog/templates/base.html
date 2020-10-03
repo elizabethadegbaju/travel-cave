@@ -46,6 +46,11 @@
             width: 4vw !important;
             height: 4vw !important;
         }
+
+        .responsive-img-tiny {
+            width: 2vw !important;
+            height: 2vw !important;
+        }
     </style>
 </head>
 <body>
@@ -65,7 +70,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const elems = document.querySelectorAll('.sidenav');
-        const instances = M.Sidenav.init(elems);
+        const dropdowns = document.querySelectorAll('.dropdown-trigger');
+        M.Sidenav.init(elems);
+        M.Dropdown.init(dropdowns);
     });
 </script>
 {% block scripts %}

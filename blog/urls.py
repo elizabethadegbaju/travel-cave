@@ -46,5 +46,6 @@ urlpatterns = [
          name='follow_location'),
     path('locations/<int:pk>/unfollow/', views.unfollow_location,
          name='unfollow_location'),
-    path('tags/<int:pk>/', views.view_tag, name='view_tag')
+    path('tags/<int:pk>/', views.view_tag, name='view_tag'),
+    path('explore/', views.explore, name='explore'),
 ]

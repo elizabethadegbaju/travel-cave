@@ -121,22 +121,24 @@
                                         <div class="row">
                                             <div class="col s12">
                                                 <h5>{{ post.title }}</h5>
-                                                {% if post.is_published %}
-                                                    <div class="right">
-                                                        <a class="btn waves-light waves-effect"
-                                                           href="{% url 'blog:edit_post' post.id %}">Edit</a>
-                                                        <a class="btn waves-light waves-effect"
-                                                           href="{% url 'blog:delete_post' post.id %}">Delete</a>
-                                                    </div>
-                                                {% else %}
-                                                    <div class="right">
-                                                        <a class="btn waves-light waves-effect"
-                                                           href="{% url 'blog:edit_post' post.id %}">Edit</a>
-                                                        <a class="btn waves-light waves-effect"
-                                                           href="{% url 'blog:delete_post' post.id %}">Delete</a>
-                                                        <a class="btn waves-light waves-effect"
-                                                           href="{% url 'blog:publish_post' post.id %}">Publish</a>
-                                                    </div>
+                                                {% if user.profile == profile %}
+                                                    {% if post.is_published %}
+                                                        <div class="right">
+                                                            <a class="btn waves-light waves-effect"
+                                                               href="{% url 'blog:edit_post' post.id %}">Edit</a>
+                                                            <a class="btn waves-light waves-effect"
+                                                               href="{% url 'blog:delete_post' post.id %}">Delete</a>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="right">
+                                                            <a class="btn waves-light waves-effect"
+                                                               href="{% url 'blog:edit_post' post.id %}">Edit</a>
+                                                            <a class="btn waves-light waves-effect"
+                                                               href="{% url 'blog:delete_post' post.id %}">Delete</a>
+                                                            <a class="btn waves-light waves-effect"
+                                                               href="{% url 'blog:publish_post' post.id %}">Publish</a>
+                                                        </div>
+                                                    {% endif %}
                                                 {% endif %}
                                                 <p>
                                                     published {{ post.created_at }}

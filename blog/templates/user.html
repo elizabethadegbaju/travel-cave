@@ -64,15 +64,17 @@
                             </div>
                             <hr>
                             <div class="row user-projects">
-                                <h6 class="col s12">Blog Posts</h6>
+                                <h6 class="col s12">Published BlogPosts</h6>
                                 {% for post in profile.blog_posts.all %}
-                                    <div class="col s4">
-                                        <a href="{% url 'blog:view_post' post.id %}">
-                                            <img class="responsive-img photo-border mt-10"
-                                                 alt=""
-                                                 src="{% static 'img/sample-1.jpg' %}">
-                                        </a>
-                                    </div>
+                                    {% if post.is_published %}
+                                        <div class="col s4">
+                                            <a href="{% url 'blog:view_post' post.id %}">
+                                                <img class="responsive-img photo-border mt-10"
+                                                     alt=""
+                                                     src="{% static 'img/sample-1.jpg' %}">
+                                            </a>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                             <hr class="mt-5">
@@ -84,29 +86,35 @@
                             <div class="row mt-2">
                                 <div class="collection">
                                     {% for review in reviews %}
-                                        <a href="{% url 'blog:view_post' review.post.id %}"
-                                           class="collection-item">
-                                            {{ review.location|capfirst }}
-                                            (in
-                                            <em>{{ review.post.title }}</em>)
-                                            {% if review.sentiment >= 0.25 %}
-                                                <br><span class="green-text">
+                                        {% if review.post.is_published %}
+                                            <a href="{% url 'blog:view_post' review.post.id %}"
+                                               class="collection-item">
+                                                {{ review.location|capfirst }}
+                                                (in
+                                                <em>{{ review.post.title }}</em>)
+                                                {% if review.sentiment >= 0.25 %}
+                                                    <br>
+                                                    <span class="green-text">
                                                     Positive Opinion
                                                 </span>
-                                            {% elif review.sentiment <= -0.25 %}
-                                                <br><span class="red-text">>
+                                                {% elif review.sentiment <= -0.25 %}
+                                                    <br>
+                                                    <span class="red-text">>
                                                     Negative Opinion
                                                 </span>
-                                            {% elif review.magnitude >= 0.2 %}
-                                                <br><span class="amber-text">
+                                                {% elif review.magnitude >= 0.2 %}
+                                                    <br>
+                                                    <span class="amber-text">
                                                     Mixed Opinion
                                                 </span>
-                                            {% else %}
-                                                <br><span class="grey-text">
+                                                {% else %}
+                                                    <br>
+                                                    <span class="grey-text">
                                                     Neutral
                                                 </span>
-                                            {% endif %}
-                                        </a>
+                                                {% endif %}
+                                            </a>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </div>

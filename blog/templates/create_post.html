@@ -9,15 +9,23 @@
         <div class="row">
             <div class="col s12 m10 l8 offset-m1 offset-l2">
                 <div class="card-panel">
-                    <form method="post" action="{% url 'blog:create_post' %}">
+                    <form method="post">
                         {% csrf_token %}
                         {{ form }}
                         <br>
                         <div class="center-align">
-                            <button class="btn waves-effect waves-light"
-                                    type="submit" name="action">Publish
-                                <i class="material-icons right">send</i>
-                            </button>
+                            <div>
+                                <button class="btn waves-effect waves-light"
+                                        formaction="{% url 'blog:create_post' %}"
+                                        type="submit">Save Draft
+                                    <i class="material-icons right">save</i>
+                                </button>
+                                <button class="btn waves-effect waves-light"
+                                        formaction="{% url 'blog:publish_new_post' %}"
+                                        type="submit">Publish Post
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>

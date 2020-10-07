@@ -68,13 +68,15 @@
                                 <h6 class="col s12">More posts by this
                                     author</h6>
                                 {% for post in profile.blog_posts.all %}
-                                    <div class="col s4">
-                                        <a href="{% url 'blog:view_post' post.id %}">
-                                            <img class="responsive-img photo-border mt-10"
-                                                 alt=""
-                                                 src="{% static 'img/sample-1.jpg' %}">
-                                        </a>
-                                    </div>
+                                    {% if post.is_published %}
+                                        <div class="col s4">
+                                            <a href="{% url 'blog:view_post' post.id %}">
+                                                <img class="responsive-img photo-border mt-10"
+                                                     alt=""
+                                                     src="{% static 'img/sample-1.jpg' %}">
+                                            </a>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                             <hr class="mt-5">
@@ -119,6 +121,23 @@
                                         <div class="row">
                                             <div class="col s12">
                                                 <h5>{{ post.title }}</h5>
+                                                {% if post.is_published %}
+                                                    <div class="right">
+                                                        <a class="btn waves-light waves-effect"
+                                                           href="{% url 'blog:edit_post' post.id %}">Edit</a>
+                                                        <a class="btn waves-light waves-effect"
+                                                           href="{% url 'blog:delete_post' post.id %}">Delete</a>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="right">
+                                                        <a class="btn waves-light waves-effect"
+                                                           href="{% url 'blog:edit_post' post.id %}">Edit</a>
+                                                        <a class="btn waves-light waves-effect"
+                                                           href="{% url 'blog:delete_post' post.id %}">Delete</a>
+                                                        <a class="btn waves-light waves-effect"
+                                                           href="{% url 'blog:publish_post' post.id %}">Publish</a>
+                                                    </div>
+                                                {% endif %}
                                                 <p>
                                                     published {{ post.created_at }}
                                                     by {{ post.author.user.get_full_name }}</p>

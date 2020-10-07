@@ -58,6 +58,23 @@ def view_post(request, pk):
 
 
 @login_required
+def publish_new_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.author = request.user.profile
+            instance.is_published = True
+            instance.save()
+            post = Post.objects.get(id=instance.id)
+            analyse_entity_sentiment(form, post)
+            classify_post(form, post)
+            return redirect('blog:view_post', post.id)
+        else:
+            return HttpResponse(status=400)
+
+
+@login_required
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -68,12 +85,12 @@ def create_post(request):
             post = Post.objects.get(id=instance.id)
             analyse_entity_sentiment(form, post)
             classify_post(form, post)
-            return redirect('blog:home')
+            return redirect('blog:view_post', post.id)
         else:
             return HttpResponse(status=400)
     elif request.method == 'GET':
         form = PostForm()
-    return render(request, 'create_post.html', {'form': form})
+        return render(request, 'create_post.html', {'form': form})
 
 
 def register(request):
@@ -109,6 +126,14 @@ def logout_view(request):
 def my_posts(request):
     posts = request.user.profile.blog_posts.all()
     return render(request, 'posts.html', {'posts': posts})
+
+
+@login_required
+def publish_post(request, pk):
+    post = Post.objects.get(id=pk)
+    post.is_published = True
+    post.save()
+    return redirect('blog:view_post', pk)
 
 
 @login_required
@@ -204,7 +229,7 @@ def view_user(request, username):
     recommended_users = (Profile.objects.filter(
         users_following__in=profile.users_following.all()) | Profile.objects.filter(
         locations_following__in=profile.locations_following.all())).exclude(
-        user=request.user).order_by('?')[:5]
+        user=request.user).distinct().order_by('?')[:5]
     previous_login = parse_datetime(
         request.session.get('previous_login', now().isoformat()))
     updates = LocationReview.objects.filter(
@@ -272,14 +297,15 @@ def users(request):
 
 def view_location(request, pk):
     location = Location.objects.get(id=pk)
-    reviews = LocationReview.objects.filter(location=location)
+    reviews = LocationReview.objects.filter(location=location,
+                                            post__is_published=True)
     return render(request, 'location.html',
                   {'location': location, 'reviews': reviews})
 
 
 def view_tag(request, pk):
     tag = Tag.objects.get(id=pk)
-    posts = tag.blog_posts.all()
+    posts = tag.blog_posts.filter(is_published=True)
     return render(request, 'tag.html',
                   {'tag': tag, 'posts': posts})
 

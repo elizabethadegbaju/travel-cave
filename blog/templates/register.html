@@ -40,16 +40,11 @@
                                        name="last_name" required>
                                 <label for="last_name">Last Name</label>
                             </div>
-                            <div class="input-field col l6 m12 s12">
+                            <div class="input-field col s12">
                                 <input id="username" type="text"
                                        name="username" required
                                        class="validate" minlength="6">
                                 <label for="username">Username</label>
-                            </div>
-                            <div class="input-field col l6 m12 s12">
-                                <input id="dob" type="text" name="dob"
-                                       class="datepicker" required>
-                                <label for="dob">Date of Birth</label>
                             </div>
                             <div class="col s12">
                                 <label>Profile Image</label>
@@ -89,20 +84,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-{% block scripts %}
-    <script>
-        var currYear = (new Date()).getFullYear();
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.datepicker');
-            var options = {
-                autoClose: true,
-                format: 'yyyy-mm-dd',
-                defaultDate: (new Date(currYear - 5, 1, 31)),
-                maxDate: new Date(currYear - 5, 12, 31),
-                yearRange: [1928, currYear - 5],
-            }
-            var instances = M.Datepicker.init(elems, options);
-        });
-    </script>
 {% endblock %}

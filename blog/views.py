@@ -101,7 +101,6 @@ def register(request):
         last_name = request.POST['last_name']
         email = request.POST['email']
         password = request.POST['password']
-        dob = request.POST['dob']
         username = request.POST['username']
         image = request.FILES['image']
 
@@ -111,7 +110,7 @@ def register(request):
                                         last_name=last_name)
         user.save()
 
-        user_profile = Profile.objects.create(DOB=dob, user=user, image=image)
+        user_profile = Profile.objects.create(user=user, image=image)
         user_profile.save()
 
         return redirect('blog:home')

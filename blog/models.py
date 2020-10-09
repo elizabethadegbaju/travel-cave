@@ -21,7 +21,6 @@ def profile_image(instance, filename):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    DOB = models.DateField()
     about = models.TextField()
     twitter = models.CharField(max_length=50, null=True, blank=True)
     instagram = models.CharField(max_length=50, null=True, blank=True)

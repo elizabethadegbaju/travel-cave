@@ -1,4 +1,3 @@
-import sys
 from datetime import timedelta, datetime
 from itertools import chain
 from operator import attrgetter
@@ -336,6 +335,18 @@ def comment_post(request, pk):
     post.total_comments += 1
     post.save()
     return redirect('blog:view_post', pk)
+
+
+def reply_comment(request, pk):
+    message = request.POST['comment']
+    comment = Comment.objects.get(id=pk)
+    post = comment.post
+    reply = Comment.objects.create(user=request.user.profile, post=post,
+                                   message=message, parent=comment)
+    reply.save()
+    post.total_comments += 1
+    post.save()
+    return redirect('blog:view_post', post.id)
 
 
 def share_post(request, pk):

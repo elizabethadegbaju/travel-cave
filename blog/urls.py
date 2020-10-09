@@ -35,6 +35,7 @@ urlpatterns = [
     path('posts/<int:pk>/unlike/', views.unlike_post, name="unlike_post"),
     path('posts/<int:pk>/comment/', views.comment_post, name="comment_post"),
     path('posts/<int:pk>/share/', views.share_post, name="share_post"),
+    path('comment/<int:pk>/reply/', views.reply_comment, name='reply_comment'),
     path('account/posts/', views.my_posts, name='my_posts'),
     path('users/<str:username>/follow/', views.follow_user,
          name='follow_user'),

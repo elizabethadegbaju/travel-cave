@@ -154,7 +154,7 @@
                                                 {% for activity in newsfeed %}
                                                     {% if activity.is_published %}
                                                         <!--Display Blog Posts-->
-                                                        <div class="row mt-5">
+                                                        <div class="row mt-1">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="{% url 'blog:view_user' activity.author.user.username %}">
                                                                     <img class="responsive-img responsive-img-small circle"
@@ -284,10 +284,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <hr class="mt-5">
+                                                        <hr class="mt-1">
                                                     {% elif activity.message %}
                                                         <!--Display Comments-->
-                                                        <div class="row mt-5">
+                                                        <div class="row mt-1">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="{% url 'blog:view_user' activity.user.user.username %}">
                                                                     <img class="responsive-img responsive-img-small circle"
@@ -321,10 +321,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <hr class="mt-5">
+                                                        <hr class="mt-1">
                                                     {% elif activity.post %}
                                                         <!--Display likes-->
-                                                        <div class="row mt-5">
+                                                        <div class="row mt-1">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="{% url 'blog:view_user' activity.user.user.username %}">
                                                                     <img class="responsive-img  responsive-img-small circle"
@@ -418,7 +418,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <hr class="mt-5">
+                                                        <hr class="mt-1">
                                                     {% endif %}
                                                 {% endfor %}
                                             </div>
@@ -427,7 +427,7 @@
                                                 {% for activity in activities %}
                                                     {% if activity.is_published %}
                                                         <!--Display Blog Posts-->
-                                                        <div class="row mt-5">
+                                                        <div class="row mt-1">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="#">
                                                                     <img class="responsive-img responsive-img-small circle"
@@ -437,7 +437,12 @@
                                                             </div>
                                                             <div class="col s11">
                                                                 <a href="#">
-                                                                    <p class="m-0">{{ profile.user.get_full_name }}
+                                                                    <p class="m-0">
+                                                                        {% if profile == request.user.profile %}
+                                                                            You
+                                                                        {% else %}
+                                                                            {{ profile.user.get_full_name }}
+                                                                        {% endif %}
                                                                         published
                                                                         <span>
                                                                 <i class="material-icons vertical-align-bottom">access_time</i>
@@ -483,7 +488,7 @@
                                                                                     </ul>
                                                                                     <div class="social-icon right">
                                                                                         {% for liked in activity.postlike_set.all %}
-                                                                                            {% if liked.user == profile %}
+                                                                                            {% if liked.user == user.profile %}
                                                                                                 <a href="{% url 'blog:unlike_post' activity.id %}"><span><i
                                                                                                         class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.total_likes }}</span></a>
                                                                                             {% else %}
@@ -558,10 +563,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <hr class="mt-5">
+                                                        <hr class="mt-1">
                                                     {% elif activity.message %}
                                                         <!--Display Comments-->
-                                                        <div class="row mt-5">
+                                                        <div class="row mt-1">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="#">
                                                                     <img class="responsive-img responsive-img-small circle"
@@ -572,7 +577,11 @@
                                                             <div class="col s11">
                                                                 <a href="#">
                                                                     <p class="m-0">
-                                                                        {{ profile.user.get_full_name }}
+                                                                        {% if profile == request.user.profile %}
+                                                                            You
+                                                                        {% else %}
+                                                                            {{ profile.user.get_full_name }}
+                                                                        {% endif %}
                                                                         commented
                                                                         on
                                                                         <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post }}</a>
@@ -595,10 +604,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <hr class="mt-5">
+                                                        <hr class="mt-1">
                                                     {% elif activity.post %}
                                                         <!--Display likes-->
-                                                        <div class="row mt-5">
+                                                        <div class="row mt-1">
                                                             <div class="col s1 pr-0 circle">
                                                                 <a href="#">
                                                                     <img class="responsive-img responsive-img-small circle"
@@ -608,7 +617,11 @@
                                                             <div class="col s11">
                                                                 <a href="#">
                                                                     <p class="m-0">
-                                                                        {{ profile.user.get_full_name }}
+                                                                        {% if profile == request.user.profile %}
+                                                                            You
+                                                                        {% else %}
+                                                                            {{ profile.user.get_full_name }}
+                                                                        {% endif %}
                                                                         liked
                                                                         <a href="{% url 'blog:view_post' activity.post.id %}">{{ activity.post }}</a>
                                                                         <span><i
@@ -664,7 +677,7 @@
                                                                                 </ul>
                                                                                 <div class="social-icon right">
                                                                                     {% for liked in activity.post.postlike_set.all %}
-                                                                                        {% if liked.user == profile %}
+                                                                                        {% if liked.user == user.profile %}
                                                                                             <a href="{% url 'blog:unlike_post' activity.post.id %}"><span><i
                                                                                                     class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.post.total_likes }}</span></a>
                                                                                         {% else %}
@@ -692,7 +705,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <hr class="mt-5">
+                                                        <hr class="mt-1">
                                                     {% endif %}
                                                 {% endfor %}
                                             </div>
@@ -723,21 +736,14 @@
                                     <h6>Who to follow</h6>
                                     {% if recommended_users %}
                                         {% for recommended_user in recommended_users %}
-                                            <div class="row mt-2">
-                                                <div class="col s2 mt-2 pr-0 circle">
-                                                    <a href="{% url 'blog:view_user' recommended_user.user.username %}">
-                                                        <img class="responsive-img responsive-img-small circle"
-                                                             src="{{ recommended_user.image.url }}"
-                                                             alt="">
-                                                    </a>
+                                            <a href="{% url 'blog:view_user' recommended_user.user.username %}">
+                                                <div class="display-flex align-items-center mt-1">
+                                                    <img src="{{ recommended_user.image.url }}"
+                                                         alt="{{ recommended_user }}"
+                                                         class="circle mr-3 responsive-img responsive-img-small vertical-text-middle">
+                                                    <h6>{{ recommended_user.user.username }}</h6>
                                                 </div>
-                                                <div class="col s9">
-                                                    <a href="{% url 'blog:view_user' recommended_user.user.username %}">
-                                                        <p class="m-0">{{ recommended_user.user.get_full_name }}</p>
-                                                    </a>
-                                                    <p class="m-0 grey-text lighten-3">{{ recommended_user.about|truncatewords:10 }}</p>
-                                                </div>
-                                            </div>
+                                            </a>
                                         {% endfor %}
                                     {% else %}
                                         <div class="row mt-2">

@@ -120,7 +120,7 @@
                                     <div class="card-content">
                                         <div class="row">
                                             <div class="col s12">
-                                                <h5>{{ post.title }}</h5>
+                                                <h3 class="text-darken-2 pink-text">{{ post.title }}</h3>
                                                 {% if user.profile == profile %}
                                                     {% if post.is_published %}
                                                         <div class="right">
@@ -145,11 +145,9 @@
                                                     by {{ post.author.user.get_full_name }}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                        </div>
                                     </div>
                                 </div>
-                                <div class="card z-depth-0" id="feed">
+                                <div class="card z-depth-0">
                                     <div class="card-content">
                                         <div class="row">
                                             <div class="col s12">
@@ -157,6 +155,108 @@
                                             </div>
                                         </div>
                                         <div class="row">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card z-depth-0">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <div>
+                                                    <h4 class="text-darken-2
+                                                     pink-text">Leave a
+                                                        Comment</h4>
+                                                    <div class="row">
+                                                        <form class="col s12"
+                                                              action="{% url 'blog:comment_post' post.id %}"
+                                                              method="post">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                                <div class="input-field col s11">
+                                                                    <textarea
+                                                                            name="comment"
+                                                                            id="comment"
+                                                                            class="materialize-textarea"></textarea>
+                                                                    <label for="comment">Comment
+                                                                        as {{ user }}</label>
+                                                                </div>
+                                                                <div class="input-field col s1">
+                                                                    <button
+                                                                            class="btn-small waves-effect waves-light right"
+                                                                            type="submit">
+                                                                        Post<i
+                                                                            class="material-icons right">send</i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        {% for comment in post.comment_set.all %}
+                                                            {% if not comment.parent %}
+                                                                <div class="col s12">
+                                                                    <div
+                                                                            class="card-panel pink lighten-5 border-radius-6">
+                                                                        <span>{{ comment.message }}</span>
+                                                                        <div class="display-flex justify-content-between align-items-center flex-wrap">
+                                                                            <div class="display-flex align-items-center mt-1">
+                                                                                <img src="{{ comment.user.image.url }}"
+                                                                                     alt="{{ comment.user }}"
+                                                                                     class="circle mr-10 responsive-img responsive-img-small vertical-text-middle">
+                                                                                <span class="pt-2">{{ comment.user.user.username }}</span>
+                                                                            </div>
+                                                                            <div class="mt-1">
+                                                                                <span class="pt-2">{{ comment.created_at|naturaltime }}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col s11 offset-s1">
+                                                                            <form action="{% url 'blog:reply_comment' comment.id %}"
+                                                                                  method="post">
+                                                                                {% csrf_token %}
+                                                                                <div class="row">
+                                                                                    <div class="input-field col s11">
+                                                                                            <textarea
+                                                                                                    name="comment"
+                                                                                                    id="reply"
+                                                                                                    class="materialize-textarea"></textarea>
+                                                                                        <label for="reply">Reply
+                                                                                            to {{ comment.user.user.username }}
+                                                                                            as {{ user }}</label>
+                                                                                    </div>
+                                                                                    <div class="input-field col s1">
+                                                                                        <button
+                                                                                                class="btn-small waves-effect waves-light"
+                                                                                                type="submit">
+                                                                                            Post<i
+                                                                                                class="material-icons right">send</i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                            {% for reply in comment.replies.all %}
+                                                                                <div class="card-panel pink lighten-5 border-radius-6">
+                                                                                    <span>{{ reply.message }}</span>
+                                                                                    <div class="display-flex justify-content-between align-items-center flex-wrap">
+                                                                                        <div class="display-flex align-items-center mt-1">
+                                                                                            <img src="{{ reply.user.image.url }}"
+                                                                                                 alt="{{ reply.user }}"
+                                                                                                 class="circle mr-10 responsive-img responsive-img-small vertical-text-middle">
+                                                                                            <span class="pt-2">{{ reply.user.user.username }}</span>
+                                                                                        </div>
+                                                                                        <div class="mt-1">
+                                                                                            <span class="pt-2">{{ reply.created_at|naturaltime }}</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

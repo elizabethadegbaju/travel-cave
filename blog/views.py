@@ -1,3 +1,4 @@
+import sys
 from datetime import timedelta, datetime
 from itertools import chain
 from operator import attrgetter
@@ -181,19 +182,18 @@ def analyse_entity_sentiment(form, post):
 
 def classify_post(form, post):
     client, document = extract_document(form)
-    response = client.classify_text(document=document)
-    categories = response.categories
     tags = list()
+    try:
+        response = client.classify_text(document=document)
+        categories = response.categories
 
-    for category in categories:
-        tag = category.name.split('/')[-1]
-        tag, created = Tag.objects.get_or_create(name=tag)
-        tag.save()
-        tags.append(tag)
-        print(u'{:<16}: {}'.format('\ntag', tag))
-        print(u'{:<16}: {}'.format('category', category.name))
-        print(u'{:<16}: {}'.format('confidence', category.confidence))
-    post.tags.set(tags)
+        for category in categories:
+            tag = category.name.split('/')[-1]
+            tag, created = Tag.objects.get_or_create(name=tag)
+            tag.save()
+            tags.append(tag)
+    finally:
+        post.tags.set(tags)
 
 
 def extract_document(form):

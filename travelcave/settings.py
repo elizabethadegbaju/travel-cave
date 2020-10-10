@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_summernote',
     'materializecssform',
     'django_social_share',
+    'django.contrib.postgres',
 ]
 
 MIDDLEWARE = [

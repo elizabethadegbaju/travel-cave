@@ -2,7 +2,6 @@ from autoslug import AutoSlugField
 from django.contrib.auth.models import User
 from django.db import models
 
-
 # Create your models here.
 from django.urls import reverse
 
@@ -31,6 +30,9 @@ class Profile(models.Model):
                                              blank=True)
     locations_following = models.ManyToManyField(to='Location', blank=True,
                                                  related_name='followers')
+    liked_posts = models.ManyToManyField(to='Post', through='PostLike',
+                                         related_name='users_liked',
+                                         blank=True)
     image = models.ImageField(null=True, blank=True, upload_to=profile_image)
 
     def __str__(self):

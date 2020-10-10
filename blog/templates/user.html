@@ -27,7 +27,7 @@
             <div class="section">
                 <div class="section" id="user-profile">
                     <div class="row">
-                        <!-- User Profile Feed -->
+                        <!-- User Profile Details -->
                         <div class="col s12 m3 l2">
                             <div class="row">
                                 <div class="col s12 center-align">
@@ -208,18 +208,13 @@
                                                                                         </li>
                                                                                     </ul>
                                                                                     <div class="social-icon right">
-                                                                                        {% for liked in activity.postlike_set.all %}
-                                                                                            {% if liked.user == profile %}
-                                                                                                <a href="{% url 'blog:unlike_post' activity.id %}"><span><i
-                                                                                                        class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.total_likes }}</span></a>
-                                                                                            {% else %}
-                                                                                                <a href="{% url 'blog:like_post' activity.id %}"><span><i
-                                                                                                        class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span></a>
-                                                                                            {% endif %}
-                                                                                        {% empty %}
+                                                                                        {% if request.user.profile in activity.users_liked.all %}
+                                                                                            <a href="{% url 'blog:unlike_post' activity.id %}"><span><i
+                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.total_likes }}</span></a>
+                                                                                        {% else %}
                                                                                             <a href="{% url 'blog:like_post' activity.id %}"><span><i
                                                                                                     class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span></a>
-                                                                                        {% endfor %}
+                                                                                        {% endif %}
                                                                                         <a href="#"><span><i
                                                                                                 class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.total_comments }}</span></a>
                                                                                         <a class="dropdown-trigger"
@@ -389,18 +384,13 @@
                                                                                     </li>
                                                                                 </ul>
                                                                                 <div class="social-icon right">
-                                                                                    {% for liked in activity.post.postlike_set.all %}
-                                                                                        {% if liked.user == profile %}
-                                                                                            <a href="{% url 'blog:unlike_post' activity.post.id %}"><span><i
-                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.post.total_likes }}</span></a>
-                                                                                        {% else %}
-                                                                                            <a href="{% url 'blog:like_post' activity.post.id %}"><span><i
-                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.post.total_likes }}</span></a>
-                                                                                        {% endif %}
-                                                                                    {% empty %}
+                                                                                    {% if request.user.profile in activity.post.users_liked.all %}
+                                                                                        <a href="{% url 'blog:unlike_post' activity.post.id %}"><span><i
+                                                                                                class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.post.total_likes }}</span></a>
+                                                                                    {% else %}
                                                                                         <a href="{% url 'blog:like_post' activity.post.id %}"><span><i
                                                                                                 class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.post.total_likes }}</span></a>
-                                                                                    {% endfor %}
+                                                                                    {% endif %}
                                                                                     <a href="#"><span><i
                                                                                             class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.post.total_comments }}</span></a>
                                                                                     <a class="dropdown-trigger"
@@ -487,18 +477,13 @@
                                                                                         </li>
                                                                                     </ul>
                                                                                     <div class="social-icon right">
-                                                                                        {% for liked in activity.postlike_set.all %}
-                                                                                            {% if liked.user == user.profile %}
-                                                                                                <a href="{% url 'blog:unlike_post' activity.id %}"><span><i
-                                                                                                        class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.total_likes }}</span></a>
-                                                                                            {% else %}
-                                                                                                <a href="{% url 'blog:like_post' activity.id %}"><span><i
-                                                                                                        class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span></a>
-                                                                                            {% endif %}
-                                                                                        {% empty %}
+                                                                                        {% if request.user.profile in activity.users_liked.all %}
+                                                                                            <a href="{% url 'blog:unlike_post' activity.id %}"><span><i
+                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.total_likes }}</span></a>
+                                                                                        {% else %}
                                                                                             <a href="{% url 'blog:like_post' activity.id %}"><span><i
                                                                                                     class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.total_likes }}</span></a>
-                                                                                        {% endfor %}
+                                                                                        {% endif %}
                                                                                         <a href="#"><span><i
                                                                                                 class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.total_comments }}</span></a>
                                                                                         <a class="dropdown-trigger"
@@ -676,18 +661,13 @@
                                                                                     </li>
                                                                                 </ul>
                                                                                 <div class="social-icon right">
-                                                                                    {% for liked in activity.post.postlike_set.all %}
-                                                                                        {% if liked.user == user.profile %}
-                                                                                            <a href="{% url 'blog:unlike_post' activity.post.id %}"><span><i
-                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.post.total_likes }}</span></a>
-                                                                                        {% else %}
-                                                                                            <a href="{% url 'blog:like_post' activity.post.id %}"><span><i
-                                                                                                    class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.post.total_likes }}</span></a>
-                                                                                        {% endif %}
-                                                                                    {% empty %}
+                                                                                    {% if request.user.profile in activity.post.users_liked.all %}
+                                                                                        <a href="{% url 'blog:unlike_post' activity.post.id %}"><span><i
+                                                                                                class="material-icons vertical-align-bottom mr-1">favorite</i>{{ activity.post.total_likes }}</span></a>
+                                                                                    {% else %}
                                                                                         <a href="{% url 'blog:like_post' activity.post.id %}"><span><i
                                                                                                 class="material-icons vertical-align-bottom mr-1">favorite_border</i>{{ activity.post.total_likes }}</span></a>
-                                                                                    {% endfor %}
+                                                                                    {% endif %}
                                                                                     <a href="#"><span><i
                                                                                             class="material-icons vertical-align-bottom ml-3 mr-1">chat_bubble_outline</i>{{ activity.post.total_comments }}</span></a>
                                                                                     <a class="dropdown-trigger"

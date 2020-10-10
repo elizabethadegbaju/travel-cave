@@ -375,4 +375,10 @@ def publish_post(request, pk):
 
 
 def explore(request):
-    return None
+    users = Profile.objects.all().annotate(posts_count=Count(
+        'blog_posts')).order_by('-posts_count')
+    locations = Location.objects.all().order_by('name')
+    tags = Tag.objects.all().order_by('name')
+    posts = Post.objects.all().annotate(likes_count=Count(
+        'postlike')).order_by('-likes_count')
+    return render(request, 'explore.html')

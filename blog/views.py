@@ -206,6 +206,7 @@ def extract_document(form):
     return client, document
 
 
+@login_required
 def delete_post(request, pk):
     post = Post.objects.get(id=pk)
     post.delete()
@@ -261,6 +262,7 @@ def get_newsfeed_sorted(users_following):
     return result_list
 
 
+@login_required
 def follow_user(request, username):
     profile = Profile.objects.get(user__username=username)
     user = request.user
@@ -268,6 +270,7 @@ def follow_user(request, username):
     return redirect('blog:view_user', username)
 
 
+@login_required
 def unfollow_user(request, username):
     profile = Profile.objects.get(user__username=username)
     user = request.user
@@ -275,6 +278,7 @@ def unfollow_user(request, username):
     return redirect('blog:view_user', username)
 
 
+@login_required
 def follow_location(request, pk):
     location = Location.objects.get(id=pk)
     user = request.user
@@ -282,6 +286,7 @@ def follow_location(request, pk):
     return redirect('blog:view_location', pk)
 
 
+@login_required
 def unfollow_location(request, pk):
     location = Location.objects.get(id=pk)
     user = request.user
@@ -308,6 +313,7 @@ def view_tag(request, pk):
                   {'tag': tag, 'posts': posts})
 
 
+@login_required
 def like_post(request, pk):
     post = Post.objects.get(id=pk)
     post_like = PostLike.objects.create(post=post, user=request.user.profile)
@@ -317,6 +323,7 @@ def like_post(request, pk):
     return redirect('blog:view_post', pk)
 
 
+@login_required
 def unlike_post(request, pk):
     post = Post.objects.get(id=pk)
     post_like = PostLike.objects.get(post=post, user=request.user.profile)
@@ -326,6 +333,7 @@ def unlike_post(request, pk):
     return redirect('blog:view_post', pk)
 
 
+@login_required
 def comment_post(request, pk):
     message = request.POST['comment']
     post = Post.objects.get(id=pk)
@@ -337,6 +345,7 @@ def comment_post(request, pk):
     return redirect('blog:view_post', pk)
 
 
+@login_required
 def reply_comment(request, pk):
     message = request.POST['comment']
     comment = Comment.objects.get(id=pk)
@@ -349,6 +358,7 @@ def reply_comment(request, pk):
     return redirect('blog:view_post', post.id)
 
 
+@login_required
 def share_post(request, pk):
     post = Post.objects.get(id=pk)
     post.total_shares += 1
@@ -356,6 +366,7 @@ def share_post(request, pk):
     return redirect('blog:view_post', pk)
 
 
+@login_required
 def publish_post(request, pk):
     post = Post.objects.get(id=pk)
     post.is_published = True

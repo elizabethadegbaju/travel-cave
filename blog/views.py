@@ -5,6 +5,7 @@ from operator import attrgetter
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.postgres.search import SearchVector, SearchRank
 from django.db.models import Count, Avg
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -375,10 +376,25 @@ def publish_post(request, pk):
 
 
 def explore(request):
-    users = Profile.objects.all().annotate(posts_count=Count(
-        'blog_posts')).order_by('-posts_count')
-    locations = Location.objects.all().order_by('name')
-    tags = Tag.objects.all().order_by('name')
-    posts = Post.objects.all().annotate(likes_count=Count(
-        'postlike')).order_by('-likes_count')
-    return render(request, 'explore.html')
+    query = request.GET['query']
+    if query:
+        profiles = Profile.objects.annotate(rank=SearchRank(
+            SearchVector('user__first_name', 'user__last_name',
+                         'user__username'), query)).order_by('-rank')
+        locations = Location.objects.annotate(
+            rank=SearchRank(SearchVector('name'), query)).order_by('-rank')
+        tags = Tag.objects.annotate(
+            rank=SearchRank(SearchVector('name'), query)).order_by('-rank')
+        posts = Post.objects.annotate(rank=SearchRank(
+            SearchVector('title', 'content', 'locations', 'tags', 'author'),
+            query)).order_by('-rank')
+    else:
+        profiles = Profile.objects.all().annotate(posts_count=Count(
+            'blog_posts')).order_by('-posts_count')
+        locations = Location.objects.all().order_by('name')
+        tags = Tag.objects.all().order_by('name')
+        posts = Post.objects.all().annotate(likes_count=Count(
+            'postlike')).order_by('-likes_count')
+    return render(request, 'explore.html',
+                  {'profiles': profiles, 'locations': locations, 'tags': tags,
+                   'posts': posts})

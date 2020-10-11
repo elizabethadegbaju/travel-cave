@@ -109,7 +109,7 @@
                 {% if user.is_authenticated %}
                     <ul>
                         <li><a class="grey-text text-lighten-3"
-                               href="{% url 'blog:explore' %}">Explore</a>
+                               href="{% url 'blog:explore' %}?query=">Explore</a>
                         </li>
                         <li><a class="grey-text text-lighten-3"
                                href="{% url 'blog:my_posts' %}">My
@@ -130,7 +130,7 @@
                                href="{% url 'blog:login' %}">Sign In</a>
                         </li>
                         <li><a class="grey-text text-lighten-3"
-                               href="{% url 'blog:explore' %}">Explore</a>
+                               href="{% url 'blog:explore' %}?query=">Explore</a>
                         </li>
                     </ul>
                 {% endif %}

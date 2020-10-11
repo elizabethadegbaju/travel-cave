@@ -1,3 +1,219 @@
 {% extends 'extended_nav.html' %}
+{% load static %}
+{% block title %}
+    Explore
+{% endblock %}
+{% block styles %}
+    <link href="{% static 'css/cards.css' %}" rel="stylesheet"
+          type="text/css">
+{% endblock %}
+{% block breadcrumbs %}
+    <a href="{% url 'blog:home' %}" class="breadcrumb">Home</a>
+    <a href="#" class="breadcrumb"> Explore</a>
+{% endblock %}
 {% block content %}
+    <div class="row">
+        <div class="col s12 container">
+            <div class="card-panel">
+                <div class="row">
+                    <div class="col s12">
+                        <form method="get" action="{% url 'blog:explore' %}">
+                            <div class="input-field col s12">
+                                <input type="text" name="query" id="query">
+                                <label for="query">Explore Travel Cave</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s12 container">
+            <ul class="tabs tabs-fixed-width">
+                <li class="tab active"><a href="#users">Users</a></li>
+                <li class="tab"><a href="#posts">Blog Posts</a></li>
+                <li class="tab"><a href="#tags">Tags</a></li>
+                <li class="tab"><a href="#locations">Locations</a></li>
+            </ul>
+        </div>
+        <!--Users-->
+        <div class="col s12 container" id="users">
+            <div class="row">
+                {% for profile in profiles %}
+                    <div class="card-panel">
+                        <div class="row">
+                            <div class="col s12 m7">
+                                <div class="display-flex media">
+                                    <a href="{% url 'blog:view_user' profile.user.username %}"
+                                       class="avatar">
+                                        <img src="{{ profile.image.url }}"
+                                             alt="{{ profile.user.get_full_name }}"
+                                             class="z-depth-4 circle"
+                                             height="64"
+                                             width="64">
+                                    </a>
+                                    <div class="media-body">
+                                        <h6 class="media-heading">
+                                    <span class="users-view-name">
+                                        {{ profile.user.get_full_name }}
+                                    </span>
+                                            <span class="grey-text">@</span>
+                                            <span class="users-view-username grey-text">{{ profile.user.username }}</span>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col s12 m5 quick-action-btns display-flex justify-content-end align-items-center pt-2">
+                                <a href="{% url 'blog:view_user' profile.user.username %}"
+                                   class="btn-small">Profile</a>
+                                {% if profile in user.profile.users_following.all %}
+                                    <a href="{% url 'blog:unfollow_user' profile.user.username %}"
+                                       class="btn-small">Unfollow</a>
+                                {% else %}
+                                    <a href="{% url 'blog:follow_user' profile.user.username %}"
+                                       class="btn-small">Follow</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!--Posts-->
+        <div class="col s12 container" id="posts">
+            <div class="row">
+                <div class="row">
+                    <div class="col s12 cards-container">
+                        {% for post in posts %}
+                            <div class="card-panel border-radius-6 mt-10 card-animation-1">
+                                <a href="{% url 'blog:view_post' post.id %}">
+                                    <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
+                                         src="{% static 'img/sample-1.jpg' %}"
+                                         alt=""></a>
+                                <h6 class="t-5">
+                                    <b><a class="text-uppercase"
+                                          href="{% url 'blog:view_post' post.id %}">{{ post.title }}</a></b>
+                                </h6>
+                                <span>{{ post.content|safe|truncatewords_html:25 }}</span>
+                                <div class="display-flex justify-content-between flex-wrap mt-4">
+                                    <div class="display-flex align-items-center mt-1">
+                                        <img src="{{ post.author.image.url }}"
+                                             class="circle responsive-img
+                                             responsive-img-tiny">
+                                        <span class="pt-2">
+                                            {{ post.author.user.username }}</span>
+                                    </div>
+                                    <div class="display-flex mt-3 right-align social-icon">
+                                        <span class="material-icons">favorite_border</span>
+                                        <span class="ml-3 vertical-align-top">{{ post.total_likes }}</span>
+                                        <span class="material-icons ml-10">chat_bubble_outline</span>
+                                        <span class="ml-3 vertical-align-top">{{ post.total_comments }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Tags-->
+        <div class="col s12 container" id="tags">
+            <div class="row">
+                {% for tag in tags %}
+                    <a href="{% url 'blog:view_tag' tag.id %}">
+                        <div class="card-panel">
+                            <div>
+                                <h5 class="pink-text darken-2 text-uppercase">{{ tag }}</h5>
+                            </div>
+                            <div class="row">
+                                {% for post in tag.blog_posts.all|slice:4 %}
+                                    <div class="col s12 m3">
+                                        <div class="card-panel border-radius-6 mt-10 card-animation-1">
+                                            <a href="{% url 'blog:view_post' post.id %}">
+                                                <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
+                                                     src="{% static 'img/sample-1.jpg' %}"
+                                                     alt=""></a>
+                                            <h6 class="t-5">
+                                                <b><a class="text-uppercase"
+                                                      href="{% url 'blog:view_post' post.id %}">{{ post.title }}</a></b>
+                                            </h6>
+                                            <span>{{ post.content|safe|truncatewords_html:25 }}</span>
+                                            <div class="display-flex justify-content-between flex-wrap mt-4">
+                                                <div class="display-flex align-items-center mt-1">
+                                                    <img src="{{ post.author.image.url }}"
+                                                         class="circle responsive-img
+                                             responsive-img-tiny">
+                                                    <span class="pt-2">
+                                            {{ post.author.user.username }}</span>
+                                                </div>
+                                                <div class="display-flex mt-3 right-align social-icon">
+                                                    <span class="material-icons">favorite_border</span>
+                                                    <span class="ml-3 vertical-align-top">{{ post.total_likes }}</span>
+                                                    <span class="material-icons ml-10">chat_bubble_outline</span>
+                                                    <span class="ml-3 vertical-align-top">{{ post.total_comments }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        <!--Locations-->
+        <div class="col s12 container" id="locations">
+            <div class="row">
+                {% for location in locations %}
+                    <a href="{% url 'blog:view_location' location.id %}">
+                        <div class="card-panel">
+                            <div>
+                                <h5 class="pink-text darken-2 text-uppercase">{{ location }}</h5>
+                            </div>
+                            <div class="row">
+                                {% for review in location.locationreview_set.all|slice:4 %}
+                                    <div class="col s12 m3">
+                                        <div class="card-panel border-radius-6 mt-10 card-animation-1">
+                                            <a href="{% url 'blog:view_post' review.post.id %}">
+                                                <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
+                                                     src="{% static 'img/sample-1.jpg' %}"
+                                                     alt=""></a>
+                                            <h6 class="t-5">
+                                                <b><a class="text-uppercase"
+                                                      href="{% url 'blog:view_post' review.post.id %}">{{ review.post.title }}</a></b>
+                                            </h6>
+                                            <span>{{ review.post.content|safe|truncatewords_html:25 }}</span>
+                                            <div class="display-flex justify-content-between flex-wrap mt-4">
+                                                <div class="display-flex align-items-center mt-1">
+                                                    <img src="{{ review.post.author.image.url }}"
+                                                         class="circle responsive-img
+                                             responsive-img-tiny">
+                                                    <span class="pt-2">
+                                            {{ review.post.author.user.username }}</span>
+                                                </div>
+                                                <div class="display-flex mt-3 right-align social-icon">
+                                                    <span class="material-icons">favorite_border</span>
+                                                    <span class="ml-3 vertical-align-top">{{ review.post.total_likes }}</span>
+                                                    <span class="material-icons ml-10">chat_bubble_outline</span>
+                                                    <span class="ml-3 vertical-align-top">{{ review.post.total_comments }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        const elems = document.querySelectorAll('.tabs');
+        const options = {}
+        var instance = M.Tabs.init(elems, options);
+    </script>
 {% endblock %}

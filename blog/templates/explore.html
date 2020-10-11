@@ -14,26 +14,39 @@
 {% block content %}
     <div class="row">
         <div class="col s12 container">
-            <div class="card-panel">
+            <div class="card-panel pb-0">
                 <div class="row">
                     <div class="col s12">
                         <form method="get" action="{% url 'blog:explore' %}">
-                            <div class="input-field col s12">
-                                <input type="text" name="query" id="query">
+                            <div class="input-field col s10">
+                                <i class="material-icons prefix">search</i>
+                                <input type="text" name="query" id="query"
+                                       value="{{ request.GET.query }}">
                                 <label for="query">Explore Travel Cave</label>
+                            </div>
+                            <div class="input-field col s2">
+                                <button class="btn waves-effect waves-light"
+                                        type="submit">
+                                    <i class="material-icons
+                                    right">arrow_right_alt</i>
+                                    Search
+                                </button>
                             </div>
                         </form>
                     </div>
+                    <div class="col s12 container">
+                        <ul class="tabs tabs-fixed-width">
+                            <li class="tab active"><a href="#users">Users</a>
+                            </li>
+                            <li class="tab"><a href="#posts">Blog Posts</a>
+                            </li>
+                            <li class="tab"><a href="#tags">Tags</a></li>
+                            <li class="tab"><a href="#locations">Locations</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col s12 container">
-            <ul class="tabs tabs-fixed-width">
-                <li class="tab active"><a href="#users">Users</a></li>
-                <li class="tab"><a href="#posts">Blog Posts</a></li>
-                <li class="tab"><a href="#tags">Tags</a></li>
-                <li class="tab"><a href="#locations">Locations</a></li>
-            </ul>
         </div>
         <!--Users-->
         <div class="col s12 container" id="users">
@@ -81,37 +94,35 @@
         <!--Posts-->
         <div class="col s12 container" id="posts">
             <div class="row">
-                <div class="row">
-                    <div class="col s12 cards-container">
-                        {% for post in posts %}
-                            <div class="card-panel border-radius-6 mt-10 card-animation-1">
-                                <a href="{% url 'blog:view_post' post.id %}">
-                                    <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
-                                         src="{% static 'img/sample-1.jpg' %}"
-                                         alt=""></a>
-                                <h6 class="t-5">
-                                    <b><a class="text-uppercase"
-                                          href="{% url 'blog:view_post' post.id %}">{{ post.title }}</a></b>
-                                </h6>
-                                <span>{{ post.content|safe|truncatewords_html:25 }}</span>
-                                <div class="display-flex justify-content-between flex-wrap mt-4">
-                                    <div class="display-flex align-items-center mt-1">
-                                        <img src="{{ post.author.image.url }}"
-                                             class="circle responsive-img
+                <div class="col s12 cards-container">
+                    {% for post in posts %}
+                        <div class="card-panel border-radius-6 mt-10 card-animation-1">
+                            <a href="{% url 'blog:view_post' post.id %}">
+                                <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
+                                     src="{% static 'img/sample-1.jpg' %}"
+                                     alt=""></a>
+                            <h6 class="t-5">
+                                <b><a class="text-uppercase"
+                                      href="{% url 'blog:view_post' post.id %}">{{ post.title }}</a></b>
+                            </h6>
+                            <span>{{ post.content|safe|truncatewords_html:25 }}</span>
+                            <div class="display-flex justify-content-between flex-wrap mt-4">
+                                <div class="display-flex align-items-center mt-1">
+                                    <img src="{{ post.author.image.url }}"
+                                         class="circle responsive-img
                                              responsive-img-tiny">
-                                        <span class="pt-2">
+                                    <span class="pt-2">
                                             {{ post.author.user.username }}</span>
-                                    </div>
-                                    <div class="display-flex mt-3 right-align social-icon">
-                                        <span class="material-icons">favorite_border</span>
-                                        <span class="ml-3 vertical-align-top">{{ post.total_likes }}</span>
-                                        <span class="material-icons ml-10">chat_bubble_outline</span>
-                                        <span class="ml-3 vertical-align-top">{{ post.total_comments }}</span>
-                                    </div>
+                                </div>
+                                <div class="display-flex mt-3 right-align social-icon">
+                                    <span class="material-icons">favorite_border</span>
+                                    <span class="ml-3 vertical-align-top">{{ post.total_likes }}</span>
+                                    <span class="material-icons ml-10">chat_bubble_outline</span>
+                                    <span class="ml-3 vertical-align-top">{{ post.total_comments }}</span>
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -126,34 +137,36 @@
                             </div>
                             <div class="row">
                                 {% for post in tag.blog_posts.all|slice:4 %}
-                                    <div class="col s12 m3">
-                                        <div class="card-panel border-radius-6 mt-10 card-animation-1">
-                                            <a href="{% url 'blog:view_post' post.id %}">
-                                                <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
-                                                     src="{% static 'img/sample-1.jpg' %}"
-                                                     alt=""></a>
-                                            <h6 class="t-5">
-                                                <b><a class="text-uppercase"
-                                                      href="{% url 'blog:view_post' post.id %}">{{ post.title }}</a></b>
-                                            </h6>
-                                            <span>{{ post.content|safe|truncatewords_html:25 }}</span>
-                                            <div class="display-flex justify-content-between flex-wrap mt-4">
-                                                <div class="display-flex align-items-center mt-1">
-                                                    <img src="{{ post.author.image.url }}"
-                                                         class="circle responsive-img
+                                    {% if post.is_published %}
+                                        <div class="col s12 m3">
+                                            <div class="card-panel border-radius-6 mt-10 card-animation-1">
+                                                <a href="{% url 'blog:view_post' post.id %}">
+                                                    <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
+                                                         src="{% static 'img/sample-1.jpg' %}"
+                                                         alt=""></a>
+                                                <h6 class="t-5">
+                                                    <b><a class="text-uppercase"
+                                                          href="{% url 'blog:view_post' post.id %}">{{ post.title }}</a></b>
+                                                </h6>
+                                                <span>{{ post.content|safe|truncatewords_html:25 }}</span>
+                                                <div class="display-flex justify-content-between flex-wrap mt-4">
+                                                    <div class="display-flex align-items-center mt-1">
+                                                        <img src="{{ post.author.image.url }}"
+                                                             class="circle responsive-img
                                              responsive-img-tiny">
-                                                    <span class="pt-2">
+                                                        <span class="pt-2">
                                             {{ post.author.user.username }}</span>
-                                                </div>
-                                                <div class="display-flex mt-3 right-align social-icon">
-                                                    <span class="material-icons">favorite_border</span>
-                                                    <span class="ml-3 vertical-align-top">{{ post.total_likes }}</span>
-                                                    <span class="material-icons ml-10">chat_bubble_outline</span>
-                                                    <span class="ml-3 vertical-align-top">{{ post.total_comments }}</span>
+                                                    </div>
+                                                    <div class="display-flex mt-3 right-align social-icon">
+                                                        <span class="material-icons">favorite_border</span>
+                                                        <span class="ml-3 vertical-align-top">{{ post.total_likes }}</span>
+                                                        <span class="material-icons ml-10">chat_bubble_outline</span>
+                                                        <span class="ml-3 vertical-align-top">{{ post.total_comments }}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -172,34 +185,36 @@
                             </div>
                             <div class="row">
                                 {% for review in location.locationreview_set.all|slice:4 %}
-                                    <div class="col s12 m3">
-                                        <div class="card-panel border-radius-6 mt-10 card-animation-1">
-                                            <a href="{% url 'blog:view_post' review.post.id %}">
-                                                <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
-                                                     src="{% static 'img/sample-1.jpg' %}"
-                                                     alt=""></a>
-                                            <h6 class="t-5">
-                                                <b><a class="text-uppercase"
-                                                      href="{% url 'blog:view_post' review.post.id %}">{{ review.post.title }}</a></b>
-                                            </h6>
-                                            <span>{{ review.post.content|safe|truncatewords_html:25 }}</span>
-                                            <div class="display-flex justify-content-between flex-wrap mt-4">
-                                                <div class="display-flex align-items-center mt-1">
-                                                    <img src="{{ review.post.author.image.url }}"
-                                                         class="circle responsive-img
+                                    {% if review.post.is_published %}
+                                        <div class="col s12 m3">
+                                            <div class="card-panel border-radius-6 mt-10 card-animation-1">
+                                                <a href="{% url 'blog:view_post' review.post.id %}">
+                                                    <img class="responsive-img border-radius-8 z-depth-4 image-n-margin"
+                                                         src="{% static 'img/sample-1.jpg' %}"
+                                                         alt=""></a>
+                                                <h6 class="t-5">
+                                                    <b><a class="text-uppercase"
+                                                          href="{% url 'blog:view_post' review.post.id %}">{{ review.post.title }}</a></b>
+                                                </h6>
+                                                <span>{{ review.post.content|safe|truncatewords_html:25 }}</span>
+                                                <div class="display-flex justify-content-between flex-wrap mt-4">
+                                                    <div class="display-flex align-items-center mt-1">
+                                                        <img src="{{ review.post.author.image.url }}"
+                                                             class="circle responsive-img
                                              responsive-img-tiny">
-                                                    <span class="pt-2">
+                                                        <span class="pt-2">
                                             {{ review.post.author.user.username }}</span>
-                                                </div>
-                                                <div class="display-flex mt-3 right-align social-icon">
-                                                    <span class="material-icons">favorite_border</span>
-                                                    <span class="ml-3 vertical-align-top">{{ review.post.total_likes }}</span>
-                                                    <span class="material-icons ml-10">chat_bubble_outline</span>
-                                                    <span class="ml-3 vertical-align-top">{{ review.post.total_comments }}</span>
+                                                    </div>
+                                                    <div class="display-flex mt-3 right-align social-icon">
+                                                        <span class="material-icons">favorite_border</span>
+                                                        <span class="ml-3 vertical-align-top">{{ review.post.total_likes }}</span>
+                                                        <span class="material-icons ml-10">chat_bubble_outline</span>
+                                                        <span class="ml-3 vertical-align-top">{{ review.post.total_comments }}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

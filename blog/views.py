@@ -385,9 +385,12 @@ def explore(request):
             rank=SearchRank(SearchVector('name'), query)).order_by('-rank')
         tags = Tag.objects.annotate(
             rank=SearchRank(SearchVector('name'), query)).order_by('-rank')
-        posts = Post.objects.annotate(rank=SearchRank(
-            SearchVector('title', 'content', 'locations', 'tags', 'author'),
-            query)).order_by('-rank')
+        posts = Post.objects.filter(is_published=True).annotate(
+            rank=SearchRank(
+                SearchVector('title', 'content', 'author__user__first_name',
+                             'author__user__last_name',
+                             'author__user__username'), query)).order_by(
+            '-rank')
     else:
         profiles = Profile.objects.all().annotate(posts_count=Count(
             'blog_posts')).order_by('-posts_count')

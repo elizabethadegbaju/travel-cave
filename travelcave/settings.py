@@ -97,7 +97,7 @@ DATABASES = {
 }
 
 if "DATABASE_URL" in os.environ:
-    DATABASES["default"] = dj_database_url.config(default=config("DATABASE_URL"), ssl_require=True)
+    DATABASES["default"] = dj_database_url.config(default=config("DATABASE_URL"), ssl_require=True,engine='django.db.backends.postgresql_psycopg2')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -145,8 +145,8 @@ AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
-MEDIA_URL = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
-MEDIA_ROOT = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.amazonaws.com/'
+MEDIA_URL = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.eu-central-1.amazonaws.com/'
+MEDIA_ROOT = 'http://' + AWS_STORAGE_BUCKET_NAME + '.s3.eu-central-1.amazonaws.com/'
 ADMIN_MEDIA_PREFIX = MEDIA_URL + 'admin/'
 
 # Extra places for collectstatic to find static files.

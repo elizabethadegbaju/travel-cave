@@ -11,9 +11,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now
-from google.cloud import language
-from google.cloud.language import enums
-from google.cloud.language import types
+from google.cloud import language_v1beta2 as language
+from google.cloud.language_v1beta2 import Entity, EntityMention, Document
 
 from blog.forms import PostForm
 from blog.models import Profile, Post, Location, LocationReview, Tag, \
@@ -160,9 +159,9 @@ def analyse_entity_sentiment(form, post):
     client, document = extract_document(form)
     response = client.analyze_entity_sentiment(document=document)
     for entity in response.entities:
-        if enums.Entity.Type(entity.type).name == 'LOCATION':
+        if Entity.Type(entity.type).name == 'LOCATION':
             for mention in entity.mentions:
-                if enums.EntityMention.Type(
+                if EntityMention.Type(
                         mention.type).name == 'PROPER':
                     print(f'\nDetected Location: {entity.name}')
                     print(f'Salience score: {entity.salience}')
@@ -202,8 +201,7 @@ def extract_document(form):
     content = form.cleaned_data.get('content')
     text = f"<p>{title}</p>{content}"
     print(text)
-    document = types.Document(content=text,
-                              type=enums.Document.Type.HTML)
+    document = Document(content=text, type=Document.Type.HTML)
     return client, document
 
 
